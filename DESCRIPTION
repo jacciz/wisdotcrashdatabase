@@ -1,5 +1,5 @@
 Package: wisdotcrashdatabase
-Title: What the Package Does (One Line, Title Case)
+Title: A package used for internal WisDOT crash database pulls and analysis
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Jacci",
@@ -7,12 +7,19 @@ Authors@R:
            role = c("aut", "cre"),
            email = "jacciziebert@gmail.com",
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to
-    pick a license
+Description: Imports data, transforms old database columns to match new database, gets many crash flags.
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 URL: https://github.com/jacciz/wisdotcrashdatabase
 BugReports: https://github.com/jacciz/wisdotcrashdatabase/issues
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Imports: 
+    tidyverse,
+    fst,
+    dplyr,
+    magrittr
