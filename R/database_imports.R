@@ -1,36 +1,43 @@
-#' Puts data in a list of filenames to import
+#' Import crash, vehicle, person from crash database
 #'
-#' it does this yada yada.
+#' This imports all data based on data type, years selected, and columns
+#' selected. For the old db, all columns will be autimatically selected. For the
+#' new db, xx are defaulted while selected_columns will allow to import
+#' additional columns.
 #' @importFrom magrittr %>%
-#' @param filepath path where CSVs are stored
-#' @param db_type Type of database - any one of (crash, vehicle, person)
-#' @param years_selected Year(s) of data c("20", "21")
-#' @param years_selected_old Year(s) of data c("16")
-#' @param selected_columns Columns to select, CRSHNMBR,CRSHDATE are automatically included
+#' @param filepath path where CSVs are stored (must all be in this folder)
+#' @param db_type Type of database - any one of "crash", "vehicle", or "person"
+#' @param years Year(s) of data c("20", "21"). Must be "17" or higher.
+#' @param years_old Year(s) of data c("16"). Must be "16" or lower.
+#' @param columns Only if years_selected is not empty. These are columns to be selected. CRSHNMBR,CRSHDATE are
+#'   automatically included. Columns with multiples, like DRVRPC, need only part w/o number.
 #'
 #' @return data frame of db_type
 #' @export
 #'
 #' @examples
 #' get_db_data(filepath = "C:/CSV/csv_from_sas/fst/", db_type = "crash",
-#' years_selected = c("17","18"), years_selected_old = c("15", "16"))
+#' years_old = c("15", "16"), years = c("17","18"),  columns = c("DRVRPC"))
+#' \dontrun{get_db_data(csv_path, "person", years_selected = "20")}
 get_db_data <-
   function(filepath,
            db_type,
-           years_selected,
-           years_selected_old,
-           selected_columns = c("CRSHTIME")) {
-    if (length(years_selected) != 0) {
-    data_years = paste(years_selected, db_type, sep = "") # combines crashes with years to select data
+           years_old = c(),
+           years = c(),
+           columns = c("CRSHTIME")) {
+    if (length(years) != 0) {
+    data_years = paste(years, db_type, sep = "") # combines crashes with years to select data
     df = paste(filepath, data_years, ".fst", sep = "") # select data in specified location/format
     df_new <-
-      do.call(dplyr::bind_rows, lapply(df, read_fst_for_new_db, selected_columns)) # reads and combines data
+      do.call(dplyr::bind_rows, lapply(df, read_fst_for_new_db, columns)) # reads and combines data
     # this imports data, keeps only crashes in public areas
     # Then it relabels column names
     df_new
+    } else {
+      df_new = data.frame()
     }
-    if (length(years_selected_old) != 0) {
-    data_years_old = paste(years_selected_old, db_type, sep = "") # combines crashes with years to select data
+    if (length(years_old) != 0) {
+    data_years_old = paste(years_old, db_type, sep = "") # combines crashes with years to select data
     df_old = paste(filepath, data_years_old, ".fst", sep = "") # select data in specified location/format
     df_old <-
       do.call(dplyr::bind_rows, lapply(df_old, read_fst_for_old_db)) %>% dplyr::filter(
@@ -41,30 +48,41 @@ get_db_data <-
     df_old <-
       data.table::setnames(
         df_old,
+        skip_absent=TRUE,  # skip if column does not exist
         c(
           "ACCDNMBR",
           "ACCDDATE",
           "ACCDMTH",
           "ACCDTIME",
+          "ACCDHOUR",
           "ACCDSVR",
-          "ACCDTYPE"
+          "ACCDTYPE",
+          "AGE",
+          "INJSVR"
         ),
         c(
           "CRSHNMBR",
           "CRSHDATE",
           "CRSHMTH",
           "CRSHTIME_GROUP",
+          "CRSHHOUR",
           "CRSHSVR",
-          "CRSHTYPE"
+          "CRSHTYPE",
+          "AGE_GROUP",
+          "WISINJ"
         )
-      ) # %>% relabel_CRSHSVR_old_db()
+      ) %>% relabel_CRSHSVR_old_db() # for person relabel_WISINJ_old_db())
+    if (db_type == "person") {
+      df_old <- df_old %>% relabel_WISINJ_old_db()
+      df_old
+    }
     df_old
+    } else {
+      df_old = data.frame()
     }
 
     dplyr::bind_rows(df_new, df_old)
   }
-
-
 
 # Read the first row to find which columns actually exists, returns columns that exist.
 read_cols <- function(file_name, colsToKeep) {
@@ -75,12 +93,48 @@ read_cols <- function(file_name, colsToKeep) {
 
 # This reads fst files and converts data types so they all match for all db
 read_fst_for_new_db <- function(file_to_read, col_to_select) {
-  col_to_select <- union(c("CRSHNMBR", "CRSHDATE","CRSHSVR"),col_to_select)
+
+  # If specific columns were selected, find which match in the database
+  if (length(col_to_select) > 0) {
+    # Get all names for data that may be in multiple column
+    columns_with_multiples <-
+      subset(
+        col_to_select,
+        grepl(
+          "WTCOND|RDCOND|ENVPC|RDWYPC|ADDTL|CLSRSN|ANMLTY|
+           DMGAR|VEHPC|HAZPLAC|HAZNMBR|HAZCLSS|HAZNAME|
+           HAZFLAG|DRVRDS|DRUGYT|DRVRRS|DRVRPC|DNMFTR|
+           NMTACT|NMTSFQ|PROTGR",
+          col_to_select
+        )
+      )
+
+    # If columns with multiples were found, make a list of all values, tack them onto the end
+    if (length(columns_with_multiples) != 0) {
+      # This adds the '01' to '20' to the end of each matching column
+      get_all_names <-
+        sapply(columns_with_multiples,
+               paste0,
+               formatC(seq(1, 20), width = 2, flag = "0")) %>% as.character()
+
+      col_to_select <- Reduce(union,
+             list(c("CRSHNMBR", "CRSHDATE", "CRSHSVR"),
+                  col_to_select,
+                  get_all_names))
+    } else {
+      col_to_select <-
+        union(c("CRSHNMBR", "CRSHDATE", "CRSHSVR"), col_to_select)
+    }
+  } else {
+    col_to_select <- c("CRSHNMBR", "CRSHDATE", "CRSHSVR")
+  }
   # I'm using mutate_at and any_of to change class type only if column exists
   found_columns <- read_cols(file_to_read, col_to_select)
+
   fst::read_fst(file_to_read, as.data.table = TRUE, columns = found_columns) %>%
     dplyr::mutate_at(dplyr::vars(dplyr::any_of(
-      c("MCFLNMBR",
+      c(
+        "MCFLNMBR",
         "RECDSTAT",
         "MUNICODE",
         "CNTYCODE",

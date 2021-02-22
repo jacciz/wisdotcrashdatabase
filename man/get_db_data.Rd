@@ -2,34 +2,39 @@
 % Please edit documentation in R/database_imports.R
 \name{get_db_data}
 \alias{get_db_data}
-\title{Puts data in a list of filenames to import}
+\title{Import crash, vehicle, person from crash database}
 \usage{
 get_db_data(
   filepath,
   db_type,
-  years_selected,
-  years_selected_old,
-  selected_columns = c("CRSHTIME")
+  years = c(),
+  years_old = c(),
+  columns = c("CRSHTIME")
 )
 }
 \arguments{
-\item{filepath}{path where CSVs are stored}
+\item{filepath}{path where CSVs are stored (must all be in this folder)}
 
-\item{db_type}{Type of database - any one of (crash, vehicle, person)}
+\item{db_type}{Type of database - any one of "crash", "vehicle", or "person"}
 
-\item{years_selected}{Year(s) of data c("20", "21")}
+\item{years}{Year(s) of data c("20", "21"). Must be "17" or higher.}
 
-\item{years_selected_old}{Year(s) of data c("16")}
+\item{years_old}{Year(s) of data c("16"). Must be "16" or lower.}
 
-\item{selected_columns}{Columns to select, CRSHNMBR,CRSHDATE are automatically included}
+\item{columns}{Only if years_selected is not empty. These are columns to be selected. CRSHNMBR,CRSHDATE are
+automatically included. Columns with multiples, like DRVRPC, need only part w/o number.}
 }
 \value{
 data frame of db_type
 }
 \description{
-it does this yada yada.
+This imports all data based on data type, years selected, and columns
+selected. For the old db, all columns will be autimatically selected. For the
+new db, xx are defaulted while selected_columns will allow to import
+additional columns.
 }
 \examples{
 get_db_data(filepath = "C:/CSV/csv_from_sas/fst/", db_type = "crash",
-years_selected = c("17","18"), years_selected_old = c("15", "16"))
+years = c("17","18"), years_old = c("15", "16"), columns = c("DRVRPC"))
+\dontrun{get_db_data(csv_path, "person", years_selected = "20")}
 }

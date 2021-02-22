@@ -18,29 +18,25 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of wisdotcrashdatabase is to ...
+The goal of wisdotcrashdatabase is to make data pulls and data analysis much easier. At my job, it is a SAS environment. I switched to R for my analysis. To set up an R environment, I converted the entire database into CSVs. I wrote automated scripts for these. Haven package is an option, but a couple things were not working properly. This package has functions to get certain crash flags, relabel by age or injury type for easier grouping.
 
 ## Installation
 
-You can install the released version of wisdotcrashdatabase from [CRAN](https://CRAN.R-project.org) with:
+This package will never be released to CRAN as it's used internally at WisDOT.
 
-``` r
-install.packages("wisdotcrashdatabase")
-```
-
-And the development version from [GitHub](https://github.com/) with:
+The package can be installed from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
 devtools::install_github("jacciz/wisdotcrashdatabase")
 ```
-## Example
+## Importing data
 
-This is a basic example which shows you how to solve a common problem:
+This is done with one function:
 
 ```{r example}
 library(wisdotcrashdatabase)
-## basic example code
+get_db_data(filepath = "C:/CSV/csv_from_sas/fst/", db_type = "crash", years_old = c("15", "16"), years = c("17","18"),  columns = c("ROLE"))
 ```
 
 What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:

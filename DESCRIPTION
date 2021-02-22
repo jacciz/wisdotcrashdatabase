@@ -7,7 +7,7 @@ Authors@R:
            role = c("aut", "cre"),
            email = "jaclyn.ziebert@dot.wi.gov",
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: Imports data, transforms old database columns to match new database, gets many crash flags.
+Description: This makes importing data into R much easier. Imports data, transforms old database columns to match new database, gets many crash flags.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -19,8 +19,11 @@ Suggests:
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Imports:
-    fst,
-    dplyr,
-    magrittr,
     data.table,
-    stringr
+    dplyr,
+    expss,
+    fst,
+    magrittr,
+    stringr,
+    tidyr,
+    utils

@@ -1,5 +1,5 @@
-# usethis::use_r("import_data_") # make new R
-# devtools::document() # for after insert Roxygen skeleton, updates NAMESPACE
+# usethis::use_r("import_data") # make new R
+# devtools::document() # for after insert Roxygen skeleton, updates NAMESPACE. ctrl shift b
 # pkgload::load_all()  - ctrl shift l
 # devtools::check()
 # usethis::use_github() # New repo
@@ -7,10 +7,17 @@
 # usethis::use_test("read_cols") to test functions (use Build pane)
 # usethis::use_package("forcats") # add packages to 'Imports'
 # build_readme() # Render readme.md
+# ctrl shift / -makes everything 80 characters
 
 
+# dist <- get_db_data(
+#   filepath = "C:/CSV/csv_from_sas/fst/",
+#   db_type = "person",
+#   years = c("17"),
+#   years_old = c("13"),
+#   columns = c("CRSHDATE", "ROLE", "UNITNMBR","ALCSUSP","DRUGSUSP","WISINJ"))
 
-#'
+# dist %>% dplyr::left_join(lookup_role_bike_ped)
 #'
 #' lookup_table <- tribble(
 #'   ~where, ~english,
