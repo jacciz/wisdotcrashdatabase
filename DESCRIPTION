@@ -5,7 +5,7 @@ Authors@R:
     person(given = "Jacci",
            family = "Ziebert",
            role = c("aut", "cre"),
-           email = "jacciziebert@gmail.com",
+           email = "jaclyn.ziebert@dot.wi.gov",
            comment = c(ORCID = "YOUR-ORCID-ID"))
 Description: Imports data, transforms old database columns to match new database, gets many crash flags.
 License: MIT + file LICENSE
@@ -18,8 +18,9 @@ BugReports: https://github.com/jacciz/wisdotcrashdatabase/issues
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
-Imports: 
-    tidyverse,
+Imports:
     fst,
     dplyr,
-    magrittr
+    magrittr,
+    data.table,
+    stringr
