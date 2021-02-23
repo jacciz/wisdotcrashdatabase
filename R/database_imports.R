@@ -1,16 +1,17 @@
 #' Import crash, vehicle, person from crash database
 #'
 #' This imports all data based on data type, years selected, and columns
-#' selected. For the old db, all columns will be autimatically selected. For the
-#' new db, xx are defaulted while selected_columns will allow to import
-#' additional columns.
+#' selected. Combines old and new crash data into a single dataframe. If an
+#' old db is imported, all columns will be automatically selected. For the new db, xx are
+#' defaulted. selected_columns will allow to import additional columns.
 #' @importFrom magrittr %>%
 #' @param filepath path where CSVs are stored (must all be in this folder)
 #' @param db_type Type of database - any one of "crash", "vehicle", or "person"
 #' @param years Year(s) of data c("20", "21"). Must be "17" or higher.
 #' @param years_old Year(s) of data c("16"). Must be "16" or lower.
-#' @param columns Only if years_selected is not empty. These are columns to be selected. CRSHNMBR,CRSHDATE are
-#'   automatically included. Columns with multiples, like DRVRPC, need only part w/o number.
+#' @param columns Only if years_selected is not empty. These are columns to be
+#'   selected. CRSHNMBR,CRSHDATE are automatically included. Columns with
+#'   multiples, like DRVRPC, need only part w/o number.
 #'
 #' @return data frame of db_type
 #' @export
@@ -101,15 +102,12 @@ read_fst_for_new_db <- function(file_to_read, col_to_select) {
       subset(
         col_to_select,
         grepl(
-          "WTCOND|RDCOND|ENVPC|RDWYPC|ADDTL|CLSRSN|ANMLTY|
-           DMGAR|VEHPC|HAZPLAC|HAZNMBR|HAZCLSS|HAZNAME|
-           HAZFLAG|DRVRDS|DRUGYT|DRVRRS|DRVRPC|DNMFTR|
-           NMTACT|NMTSFQ|PROTGR",
+          "WTCOND|RDCOND|ENVPC|RDWYPC|ADDTL|CLSRSN|ANMLTY|DMGAR|VEHPC|HAZPLAC|HAZNMBR|HAZCLSS|HAZNAME|HAZFLAG|DRVRDS|DRUGYT|DRVRRS|DRVRPC|DNMFTR|STATNM|NMTACT|NMTSFQ|PROTGR",
           col_to_select
         )
       )
 
-    # If columns with multiples were found, make a list of all values, tack them onto the end
+    # If columns with multiples were found, make a list of all values, tack them onto the end. i.e. DRVRPC01, DRVRPC02, etc.
     if (length(columns_with_multiples) != 0) {
       # This adds the '01' to '20' to the end of each matching column
       get_all_names <-
@@ -128,9 +126,9 @@ read_fst_for_new_db <- function(file_to_read, col_to_select) {
   } else {
     col_to_select <- c("CRSHNMBR", "CRSHDATE", "CRSHSVR")
   }
-  # I'm using mutate_at and any_of to change class type only if column exists
-  found_columns <- read_cols(file_to_read, col_to_select)
 
+  found_columns <- read_cols(file_to_read, col_to_select)
+  # I'm using mutate_at and any_of to change class type only if column exists
   fst::read_fst(file_to_read, as.data.table = TRUE, columns = found_columns) %>%
     dplyr::mutate_at(dplyr::vars(dplyr::any_of(
       c(
@@ -163,14 +161,21 @@ read_fst_for_new_db <- function(file_to_read, col_to_select) {
 
 read_fst_for_old_db <- function(file_to_read) {
   fst::read_fst(file_to_read, as.data.table = TRUE) %>%
-    dplyr::mutate_at(dplyr::vars(dplyr::any_of(c(
-      "URBRURAL", "STPTLNB", "ZIPCODE", "NTFYDATE", "TKBSPRMT", "MCFLNMBR", "DOCTNMBR"
-    ))), as.character) %>%
+    dplyr::mutate_at(dplyr::vars(dplyr::any_of(
+      c(
+        "URBRURAL",
+        "STPTLNB",
+        "ZIPCODE",
+        "NTFYDATE",
+        "TKBSPRMT",
+        "MCFLNMBR",
+        "DOCTNMBR"
+      )
+    )), as.character) %>%
     dplyr::mutate_at(dplyr::vars(dplyr::starts_with("DMGAR")), as.character) %>%
     # mutate_at(dplyr::vars(any_of("NTFYDATE")), ymd) %>%
     # Format county name so they are not all in caps
     dplyr::mutate_at("CNTYCODE", stringr::str_to_title) %>%
-    dplyr::mutate(
-      CNTYCODE = ifelse(CNTYCODE == "Fond Du Lac", "Fond du Lac", CNTYCODE))
+    dplyr::mutate(CNTYCODE = ifelse(CNTYCODE == "Fond Du Lac", "Fond du Lac", CNTYCODE))
   # ZIPCODE = ifelse(is.na(ZIPCODE), "0", ZIPCODE)
 }

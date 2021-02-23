@@ -7,8 +7,8 @@
 get_db_data(
   filepath,
   db_type,
-  years = c(),
   years_old = c(),
+  years = c(),
   columns = c("CRSHTIME")
 )
 }
@@ -17,24 +17,25 @@ get_db_data(
 
 \item{db_type}{Type of database - any one of "crash", "vehicle", or "person"}
 
-\item{years}{Year(s) of data c("20", "21"). Must be "17" or higher.}
-
 \item{years_old}{Year(s) of data c("16"). Must be "16" or lower.}
 
-\item{columns}{Only if years_selected is not empty. These are columns to be selected. CRSHNMBR,CRSHDATE are
-automatically included. Columns with multiples, like DRVRPC, need only part w/o number.}
+\item{years}{Year(s) of data c("20", "21"). Must be "17" or higher.}
+
+\item{columns}{Only if years_selected is not empty. These are columns to be
+selected. CRSHNMBR,CRSHDATE are automatically included. Columns with
+multiples, like DRVRPC, need only part w/o number.}
 }
 \value{
 data frame of db_type
 }
 \description{
 This imports all data based on data type, years selected, and columns
-selected. For the old db, all columns will be autimatically selected. For the
-new db, xx are defaulted while selected_columns will allow to import
-additional columns.
+selected. Combines old and new crash data into a single dataframe. If an
+old db is imported, all columns will be automatically selected. For the new db, xx are
+defaulted. selected_columns will allow to import additional columns.
 }
 \examples{
 get_db_data(filepath = "C:/CSV/csv_from_sas/fst/", db_type = "crash",
-years = c("17","18"), years_old = c("15", "16"), columns = c("DRVRPC"))
+years_old = c("15", "16"), years = c("17","18"),  columns = c("DRVRPC"))
 \dontrun{get_db_data(csv_path, "person", years_selected = "20")}
 }

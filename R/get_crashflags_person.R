@@ -48,12 +48,14 @@ get_distracted_driver_flag <- function(person_df) {
 
 get_speed_flag <- function(person_df) {
   speed <- person_df %>%
-    dplyr::select(.data$ROLE,
-                  .data$DRVRFLAG,
-                  .data$UNITNMBR,
-                  .data$CRSHNMBR,
-                  dplyr::starts_with("DRVRPC"),
-                  dplyr::starts_with("STATNM")) %>%
+    dplyr::select(
+      .data$ROLE,
+      .data$DRVRFLAG,
+      .data$UNITNMBR,
+      .data$CRSHNMBR,
+      dplyr::starts_with("DRVRPC"),
+      dplyr::starts_with("STATNM")
+    ) %>%
     dplyr::filter(.data$ROLE == 'Driver' |
                     .data$DRVRFLAG == 'Y') %>% dplyr::filter_all(dplyr::any_vars(
                       grepl(
@@ -62,17 +64,46 @@ get_speed_flag <- function(person_df) {
                         .
                       )
                     )) %>% dplyr::select(.data$CRSHNMBR, .data$UNITNMBR, .data$ROLE) %>% dplyr::mutate(speed_flag = "Y")
-  return(dplyr::left_join(person_df, speed, by = c("CRSHNMBR", "UNITNMBR", "ROLE")) %>% dplyr::mutate(speed_flag = tidyr::replace_na(.data$speed_flag, "N")))
+  return(
+    dplyr::left_join(person_df, speed, by = c("CRSHNMBR", "UNITNMBR", "ROLE")) %>% dplyr::mutate(speed_flag = tidyr::replace_na(.data$speed_flag, "N"))
+  )
 }
 
-get_impaired_person <- function(person_df,
-                                driver_only = "N",
-                                include_alc = "Y",
-                                include_drug = "Y",
-                                by = "and") {
-  if(driver_only == "Y"){
-    person_df <- person_df %>% dplyr::filter(.data$ROLE %in% c("DRIVER", "Driver") | .data$DRVRFLAG == 'Y')}
-  person_df %>% dplyr::left_join(lookup_susp_drug) %>% dplyr::left_join(lookup_susp_alcohol)
+#' Get alcohol or drug person, or by driver
+#'
+#' @importFrom magrittr %>%
+#' @param person_df person df (new or old)
+#' @param driver_only role as driver?
+#' @param include_alc suspected alcohol?
+#' @param include_drug suspected drug?
+#' @param by intersection by - either "and" or "or"
+#'
+#' @return same person_df with drug_flag or alcohol_flag
+#' @export
+#'
+#' @examples
+get_alc_drug_impaired_person <- function(person_df,
+                                         driver_only = "N",
+                                         include_alc = "Y",
+                                         include_drug = "Y",
+                                         by = "and") {
+  if (driver_only == "Y") {
+    person_df <-
+      person_df %>% dplyr::filter(.data$ROLE %in% c("DRIVER", "Driver") |
+                                    .data$DRVRFLAG == 'Y')
+  }
+  if (include_alc == "Y") {
+    person_df <- person_df %>%
+      dplyr::left_join(lookup_susp_alcohol) %>%
+      dplyr::mutate(alcohol_flag = ifelse(is.na(.data$alcohol_flag), "U", .data$alcohol_flag))
+  }
+  if (include_drug == "Y") {
+    person_df <- person_df %>%
+      dplyr::left_join(lookup_susp_drug) %>%
+      dplyr::mutate(drug_flag = ifelse(is.na(.data$drug_flag), "U", .data$drug_flag))
+  }
+  return(person_df)
+  # return(dplyr::left_join(alc_df, drug_df, by = c("CRSHNMBR", "CUSTNMBR")))
 }
 
 # get_teen_driver <- function(person_df) {

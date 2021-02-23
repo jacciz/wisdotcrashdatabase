@@ -63,17 +63,21 @@ testthat::test_that("2017 speed crashes",
                       ), 19182)
                     }) # # 20,061 in 2018, 19,182 in 2017, 19,540 in 2016
 
+testthat::test_that("2017 impaired person",
+                    {
+                      testthat::expect_equal(nrow(
+                        get_db_data(
+                          filepath = "C:/CSV/csv_from_sas/fst/",
+                          db_type = "person",
+                          years = c("17"),
+                          columns = c("UNITNMBR","DRVRFLAG","ALCSUSP","DRUGSUSP","ROLE")
+                        ) %>% get_alc_drug_impaired_person(driver_only = "Y", include_drug = "N") %>% dplyr::filter(alcohol_flag == "Y")), 6061)
+                    })
 
-
-
-
-
-
-
-
-
-# dist <- get_db_data(
+#
+#
+# imp <- get_db_data(
 #   filepath = "C:/CSV/csv_from_sas/fst/",
 #   db_type = "person",
 #   years = c("17"),
-#   columns = c("ROLE", "UNITNMBR", "DRVRDS", "DISTACT"))
+#   columns = c("ROLE", "DRVRFLAG", "UNITNMBR","ALCSUSP","DRUGSUSP","CUSTNMBR", "SEX", "WISINJ"))
