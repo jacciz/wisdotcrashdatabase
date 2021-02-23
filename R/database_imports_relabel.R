@@ -3,7 +3,7 @@
 relabel_CRSHSVR_old_db <- function(df) {
   df %>%
     dplyr::mutate(CRSHSVR = dplyr::recode(
-      CRSHSVR,
+      .data$CRSHSVR,
       !!!c(
         "PROPERTY DAMAGE" = "Property Damage",
         "INJURY" = "Injury",
@@ -14,7 +14,7 @@ relabel_CRSHSVR_old_db <- function(df) {
 relabel_WISINJ_old_db <- function(df) {
   df %>%
     dplyr::mutate(WISINJ = dplyr::recode(
-      expss::na_if(WISINJ, ""),
+      expss::na_if(.data$WISINJ, ""),
       !!!c(
         "INCAPACITATING" = "Suspected Serious Injury",
         "NONINCAPACITATING" = "Suspected Minor Injury",

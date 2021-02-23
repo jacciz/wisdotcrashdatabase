@@ -1,14 +1,34 @@
-#' Get distracted driver flag
+#' Get driver flags
 #'
-#' This returns a column distracted == Y.
-
-#' @param person_df data frame of person, must have ROLE, UNITNMBR, DISTACT,
-#'   DRVRDS
+#' This adds a column(s) of certain crash flags. It will only add a flag to
+#' where there is a driver. Driver flags are: distracted, speed, teen, and
+#' older.
+#' @param person_df data frame of person, must have DISTACT, DRVRDS
+#' @param flags flags to select ("distracted","speed","teen","older")
 #'
-#' @return speed_flag (Y or N)
+#' @return Adds a column of selected flags with distracted_flag ("Y" or "N")
 #' @export
 #'
 #' @examples
+#' \dontrun{get_driver_flags(person_df, flags = c("teen", "distracted"))}
+#'
+get_driver_flags <- function(person_df,
+                              flags) {
+  if ("distracted" %in% flags) {
+    person_df <- get_distracted_driver_flag(person_df)
+  }
+  if ("speed" %in% flags) {
+    person_df <- get_speed_flag(person_df)
+  }
+  if ("teen" %in% flags) {
+    person_df <- get_teen_driver(person_df)
+  }
+  if ("older" %in% flags) {
+    person_df <- get_older_driver(person_df)
+  }
+  person_df
+}
+
 get_distracted_driver_flag <- function(person_df) {
   distracted <- person_df %>%
     dplyr::select(.data$ROLE,
@@ -69,24 +89,43 @@ get_speed_flag <- function(person_df) {
   )
 }
 
+
+get_teen_driver <- function(person_df) {
+  teen <-
+    person_df %>% dplyr::filter(.data$AGE %in% c(16, 17, 18, 19), .data$ROLE == 'Driver' |
+                                  .data$DRVRFLAG == 'Y') %>% dplyr::select(.data$CRSHNMBR, .data$UNITNMBR, .data$ROLE) %>% dplyr::mutate(teendriver_flag = "Y")
+  teen[is.na(teen)] <- "N"
+  return(
+    dplyr::left_join(person_df, teen, by = c("CRSHNMBR", "UNITNMBR", "ROLE")) %>% dplyr::mutate(teendriver_flag = tidyr::replace_na(.data$teendriver_flag, "N"))
+  )
+}
+
+get_older_driver <- function(person_df) {
+  older <-
+    person_df %>% dplyr::filter(.data$AGE >= 65, .data$ROLE == 'Driver' |
+                                  .data$DRVRFLAG == 'Y') %>% dplyr::select(.data$CRSHNMBR, .data$UNITNMBR, .data$ROLE) %>% dplyr::mutate(olderdriver_flag = "Y")
+  return(
+    dplyr::left_join(person_df, older, by = c("CRSHNMBR", "UNITNMBR", "ROLE")) %>% dplyr::mutate(olderdriver_flag = tidyr::replace_na(.data$olderdriver_flag, "N"))
+  )
+}
+
 #' Get alcohol or drug person, or by driver
 #'
 #' @importFrom magrittr %>%
-#' @param person_df person df (new or old)
+#' @inheritParams get_driver_flags
 #' @param driver_only role as driver?
 #' @param include_alc suspected alcohol?
 #' @param include_drug suspected drug?
-#' @param by intersection by - either "and" or "or"
 #'
 #' @return same person_df with drug_flag or alcohol_flag
 #' @export
 #'
 #' @examples
+#' \dontrun{get_alc_drug_impaired_person(person17, include_alc = "N")}
 get_alc_drug_impaired_person <- function(person_df,
                                          driver_only = "N",
                                          include_alc = "Y",
-                                         include_drug = "Y",
-                                         by = "and") {
+                                         include_drug = "Y") {
   if (driver_only == "Y") {
     person_df <-
       person_df %>% dplyr::filter(.data$ROLE %in% c("DRIVER", "Driver") |
@@ -106,20 +145,7 @@ get_alc_drug_impaired_person <- function(person_df,
   # return(dplyr::left_join(alc_df, drug_df, by = c("CRSHNMBR", "CUSTNMBR")))
 }
 
-# get_teen_driver <- function(person_df) {
-#   teen <-
-#     person_df %>% dplyr::filter(AGE %in% c(16, 17, 18, 19), ROLE == 'Driver' |
-#                                   DRVRFLAG == 'Y') %>% dplyr::select(CRSHNMBR, UNITNMBR, ROLE) %>% dplyr::mutate(teendriver_flag = "Y")
-#   teen[is.na(teen)] <- "N"
-#   return(dplyr::left_join(person_df, teen, by = c("CRSHNMBR", "UNITNMBR", "ROLE"))%>% dplyr::mutate(teendriver_flag = tidyr::replace_na(teendriver_flag, "N")))
-# }
-#
-# get_older_driver <- function(person_df) {
-#   older <-
-#     person_df %>% filter(AGE >= 65, ROLE == 'Driver' |
-#                            DRVRFLAG == 'Y') %>% dplyr::select(CRSHNMBR, UNITNMBR, ROLE) %>% dplyr::mutate(olderdriver_flag = "Y")
-#   return(dplyr::left_join(person_df, older, by = c("CRSHNMBR", "UNITNMBR", "ROLE")) %>% dplyr::mutate(olderdriver_flag = tidyr::replace_na(olderdriver_flag, "N")))
-# }
+
 #
 # # get_seat_belt <- # may need character, not attribute code
 # #   function(person_df) {
@@ -137,15 +163,53 @@ get_alc_drug_impaired_person <- function(person_df,
 #     )) %>% dplyr::select(CRSHNMBR, UNITNMBR, ROLE) %>% dplyr::mutate(seatbelt_flag_role = "Y")
 #   return(dplyr::left_join(person_df, sb, by = c("CRSHNMBR", "UNITNMBR", "ROLE")) %>% dplyr::mutate(seatbelt_flag_role = tidyr::replace_na(seatbelt_flag_role, "N")))
 # }
-#
-# get_seatbelt_flag_by_unit <- function(person_df) {
-#   sb <-
-#     person_df %>% filter((
-#       SFTYEQP %in% c("None Used - Vehicle Occupant",
-#                      "NONE USED-VEHICLE OCCUPANT") |
-#         (-(
-#           EYEPROT %in% c("Yes: Worn", "Yes: Windshield", "Yes: Worn and Windshield")
-#         ) & HLMTUSE %in% c("No"))
-#     )) %>% dplyr::select(CRSHNMBR, UNITNMBR) %>% dplyr::mutate(seatbelt_flag_unit = "Y")
-#   return(dplyr::left_join(person_df, sb, by = c("CRSHNMBR", "UNITNMBR")) %>% dplyr::mutate(seatbelt_flag_unit = tidyr::replace_na(seatbelt_flag_unit, "N")))
-# }
+
+#' Get seatbelt flag
+#'
+#' Finds if a person in a unit was not wearing a seatbelt. For example, a
+#' passenger not wearing a seatbelt, every person in that unit would get a seat
+#' belt flag. This includes the drivers and other passengers, if any. Need SFTYEQP, EYEPROT, HLMTUSE, UNITNMBR.
+#' @importFrom magrittr %>%
+#' @importFrom dplyr select mutate left_join filter
+#' @inheritParams get_driver_flags
+#'
+#' @return person_df with seatbelt_flag_unit ("Y" or "N")
+#' @export
+#'
+#' @examples
+#' \dontrun{get_seatbelt_flag_by_unit(person17)}
+get_seatbelt_flag_by_unit <- function(person_df) {
+  sb <-
+    person_df %>% filter((
+      .data$SFTYEQP %in% c("None Used - Vehicle Occupant",
+                     "NONE USED-VEHICLE OCCUPANT") |
+        (-(
+          .data$EYEPROT %in% c("Yes: Worn", "Yes: Windshield", "Yes: Worn and Windshield")
+        ) & .data$HLMTUSE %in% c("No"))
+    )) %>% select(.data$CRSHNMBR, .data$UNITNMBR) %>% mutate(seatbelt_flag_unit = "Y")
+  return(left_join(person_df, sb, by = c("CRSHNMBR", "UNITNMBR")) %>% mutate(seatbelt_flag_unit = tidyr::replace_na(.data$seatbelt_flag_unit, "N")))
+}
+
+#' Relabels data in person
+#'
+#' This bins certain variables by recategorizing and making a new column. This
+#' is useful when working with data from an old and new database.
+#' @importFrom magrittr %>%
+#' @inheritParams get_driver_flags
+#' @param relabel_by "wisinj", "bikeped"
+#'
+#' @return person_df with new column(s)
+#' @export
+#'
+#' @examples
+#' \dontrun{system.file("extdata", "17person.fst", package = "fst") %>%
+#'   relabel_person_date(relabel_by = "bikeped")}
+relabel_person_variables <- function(person_df,
+                                relabel_by = "wisinj"){
+  if (relabel_by %in% "wisinj"){
+    person_df %>% dplyr::left_join(bin_wisinj_levels)
+  }
+  if (relabel_by %in% "bikeped"){
+    person_df %>% dplyr::left_join(lookup_role_bike_ped)
+  }
+}

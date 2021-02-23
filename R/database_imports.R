@@ -1,9 +1,12 @@
 #' Import crash, vehicle, person from crash database
 #'
 #' This imports all data based on data type, years selected, and columns
-#' selected. Combines old and new crash data into a single dataframe. If an
-#' old db is imported, all columns will be automatically selected. For the new db, xx are
-#' defaulted. selected_columns will allow to import additional columns.
+#' selected. Combines old and new crash data into a single dataframe. If an old
+#' db is imported, all columns will be automatically selected.
+#'
+#' For the new db, "CRSHNMBR", "CRSHDATE", "CRSHSVR" are defaulted.
+#' selected_columns allows to import additional columns. "UNITNMBR",
+#' "ROLE","VEHTYPE","WISINJ"
 #' @importFrom magrittr %>%
 #' @param filepath path where CSVs are stored (must all be in this folder)
 #' @param db_type Type of database - any one of "crash", "vehicle", or "person"
@@ -17,10 +20,10 @@
 #' @export
 #'
 #' @examples
-#' get_db_data(filepath = "C:/CSV/csv_from_sas/fst/", db_type = "crash",
-#' years_old = c("15", "16"), years = c("17","18"),  columns = c("DRVRPC"))
-#' \dontrun{get_db_data(csv_path, "person", years_selected = "20")}
-get_db_data <-
+#' import_db_data(filepath = "C:/CSV/csv_from_sas/fst/", db_type = "crash",
+#'   years_old = c("15", "16"), years = c("17","18"),  columns = c("DRVRPC"))
+#' \dontrun{import_db_data(csv_path, "person", years_selected = "20")}
+import_db_data <-
   function(filepath,
            db_type,
            years_old = c(),
@@ -42,10 +45,10 @@ get_db_data <-
     df_old = paste(filepath, data_years_old, ".fst", sep = "") # select data in specified location/format
     df_old <-
       do.call(dplyr::bind_rows, lapply(df_old, read_fst_for_old_db)) %>% dplyr::filter(
-        ACCDSVR != 'NON-REPORTABLE',
-        ACCDLOC == 'INTERSECTION' |
-          ACCDLOC == 'NON-INTERSECTION'
-      ) %>% dplyr::select(-ACCDLOC)
+        .data$ACCDSVR != 'NON-REPORTABLE',
+        .data$ACCDLOC == 'INTERSECTION' |
+          .data$ACCDLOC == 'NON-INTERSECTION'
+      ) %>% dplyr::select(-.data$ACCDLOC)
     df_old <-
       data.table::setnames(
         df_old,
@@ -88,6 +91,7 @@ get_db_data <-
 # Read the first row to find which columns actually exists, returns columns that exist.
 read_cols <- function(file_name, colsToKeep) {
   header <- fst::read_fst(file_name, to = 1)
+  colsToKeep <- union(c("UNITNMBR", "ROLE","VEHTYPE","WISINJ"), colsToKeep) # Tack this on, for person db
   # Keeps only columns found in the df
   subset(colsToKeep, colsToKeep %in% colnames(header))
 }
@@ -101,8 +105,8 @@ read_fst_for_new_db <- function(file_to_read, col_to_select) {
     columns_with_multiples <-
       subset(
         col_to_select,
-        grepl(
-          "WTCOND|RDCOND|ENVPC|RDWYPC|ADDTL|CLSRSN|ANMLTY|DMGAR|VEHPC|HAZPLAC|HAZNMBR|HAZCLSS|HAZNAME|HAZFLAG|DRVRDS|DRUGYT|DRVRRS|DRVRPC|DNMFTR|STATNM|NMTACT|NMTSFQ|PROTGR",
+        grepl( # Columns that have multiples
+          "WTCOND|RDCOND|ENVPC|RDWYPC|ADDTL|CLSRSN|ANMLTY|DMGAR|VEHPC|HAZPLAC|HAZNMBR|HAZCLSS|HAZNAME|HAZFLAG|DRVRDS|DRUGYT|DRVRRS|DRVRPC|DNMFTR|STATNM|NMTACT|NMTSFQ|PROTGR|CITISS|CITNM|STATDS|STATSV|RSTRCT|CITNM",
           col_to_select
         )
       )
@@ -176,6 +180,6 @@ read_fst_for_old_db <- function(file_to_read) {
     # mutate_at(dplyr::vars(any_of("NTFYDATE")), ymd) %>%
     # Format county name so they are not all in caps
     dplyr::mutate_at("CNTYCODE", stringr::str_to_title) %>%
-    dplyr::mutate(CNTYCODE = ifelse(CNTYCODE == "Fond Du Lac", "Fond du Lac", CNTYCODE))
+    dplyr::mutate(CNTYCODE = ifelse(.data$CNTYCODE == "Fond Du Lac", "Fond du Lac", .data$CNTYCODE))
   # ZIPCODE = ifelse(is.na(ZIPCODE), "0", ZIPCODE)
 }

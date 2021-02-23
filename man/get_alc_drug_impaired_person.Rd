@@ -8,24 +8,24 @@ get_alc_drug_impaired_person(
   person_df,
   driver_only = "N",
   include_alc = "Y",
-  include_drug = "Y",
-  by = "and"
+  include_drug = "Y"
 )
 }
 \arguments{
-\item{person_df}{person df (new or old)}
+\item{person_df}{data frame of person, must have DISTACT, DRVRDS}
 
 \item{driver_only}{role as driver?}
 
 \item{include_alc}{suspected alcohol?}
 
 \item{include_drug}{suspected drug?}
-
-\item{by}{intersection by - either "and" or "or"}
 }
 \value{
 same person_df with drug_flag or alcohol_flag
 }
 \description{
 Get alcohol or drug person, or by driver
+}
+\examples{
+\dontrun{get_alc_drug_impaired_person(person17, include_alc = "N")}
 }

@@ -7,7 +7,7 @@
 #' The foo functions ...
 #'
 #' @docType package
-#' @name foo
+#' @name wisdotcrashdatabase
 NULL
 #> NULL
 

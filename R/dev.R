@@ -1,62 +1,29 @@
 # usethis::use_r("import_data") # make new R
 # devtools::document() # for after insert Roxygen skeleton, updates NAMESPACE. ctrl shift b
-# pkgload::load_all()  - ctrl shift l
+# usethis::use_package("forcats") # add packages to 'Imports'
+
+# pkgload::load_all()  - ctrl shift l loads everything in the package
 # devtools::check()
+# devtools::test() ctrl shift t
 # usethis::use_github() # New repo
 # install() to install into library
 # usethis::use_test("read_cols") to test functions (use Build pane)
-# usethis::use_package("forcats") # add packages to 'Imports'
-# build_readme() # Render readme.md
+
+# devtools::build_readme() # Render readme.md
+# devtools::build_manual() # Render PDF manual
+# R CMD Rd2pdf c:/W_shortcut/wisdotcrashdatabase
 # ctrl shift / -makes everything 80 characters
 
-
-# dist <- get_db_data(
-#   filepath = "C:/CSV/csv_from_sas/fst/",
-#   db_type = "person",
-#   years = c("17"),
-#   years_old = c("13"),
-#   columns = c("CRSHDATE", "ROLE", "UNITNMBR","ALCSUSP","DRUGSUSP","WISINJ"))
-
-# dist %>% dplyr::left_join(lookup_role_bike_ped)
-#'
-#' lookup_table <- tribble(
-#'   ~where, ~english,
-#'   "beach",     "US",
-#'   "coast",     "US",
-#'   "seashore",     "UK",
-#'   "seaside",     "UK"
-#' )
-#'
-#' dat <- dat %>%
-#'   left_join(lookup_table)
-#' #> Joining, by = "where"
-#'
-#' # Or put this in a csv and put in a helper.R and source() it
-#' #' export
-#' localize_beach <- function(dat) {
-#'   lookup_table <- read_csv(
-#'     "beach-lookup-table.csv",
-#'     col_types = cols(where = "c", english = "c")
-#'   )
-#'   left_join(dat, lookup_table)
-#' }
-#'
-#' # In the function
-#' (dat <- dat %>%
-#'     localize_beach() %>%
-#'     celsify_temp())
-#'
-#' # option 1 (then you should also put utils in Imports)
-#' utils::globalVariables(c("english", "temp"))
-
+# importFrom dplyr left_join filter mutate
 
 
 # 7.6 Constant health checks
 # Here is a typical sequence of calls when using devtools for package development:
 #
 # Edit one or more files below R/.
-# document() (if you’ve made any changes that impact help files or NAMESPACE)
-# load_all()
+# devtools::document() (if you’ve made any changes that impact help files or NAMESPACE)
+# devtools::load_all()
 # Run some examples interactively.
+# devtools::test()
 # test() (or test_file())
-# check()
+# devtools::check()
