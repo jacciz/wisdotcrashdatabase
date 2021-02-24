@@ -32,29 +32,34 @@ devtools::install_github("jacciz/wisdotcrashdatabase")
 ```
 
 ## Setting up environment
-The format data in this package must be in a .fst, while narratives are read as a .csv. In order to set the up, SAS code is run for each year and is exported to a folder of your choosing. Run the code in inst/extdata/SAS_to_FST/ to do this. Data for each year must be run. Place all data in the same folder.
+The format data in this package must be in a .fst, while narratives are read as a .csv. In order to set the up, SAS code is run for each year and is exported to a folder of your choosing. Run the code in inst/extdata/SAS_to_FST/ to do this. Data for each year must be run. Place all exported CSV data in the same folder.
 
-Next, run CSV_to_FST.R. This reads the CSV files and exports as a FST. This is a batch job and can be run only once.
+Next, run CSV_to_FST.R. This reads the CSV files and exports as a FST. This is a batch job and can be run only once. The .ps1 file automates the translation from SAS to .fst by running the command in Shell. Be sure to chamge the system path for all of this code.
 
 ## Importing data
 
-Old and new database data can be uploaded and imported via a single data frame. If new db is selected, then columns will have to be selected. Certain old db columns are renamed to match the new db. Import is done with one function:
+Old and new database data can be imported into R via a single data frame. If 'years' for a new db is selected, then columns will have to be selected. Certain old db columns are renamed to match the new db. Some columns will always be selected (see Documentation). Import is done with one function:
 
-```{r example, echo=T}
+```{r example, echo=T, message=FALSE, results = 'asis'}
 library(wisdotcrashdatabase)
 library(lubridate)
 library(magrittr)
 library(dplyr)
 
-import_db_data(
+cat("#### Number of crashes")
+crash <- import_db_data(
   filepath = "C:/CSV/csv_from_sas/fst/",
   db_type = "crash",
   years_old = c("15", "16"),
-  years = c("17", "18")
-) %>% count(year(CRSHDATE))
+  years = c("17", "18"),
+  columns = c("CRSHMTH")
+)
+crash %>% count(year(CRSHDATE))
 ```
 
 ## Crash flags
+There are also functions to get crash flags. When run, a new column is added with either a "Y" or "N" if that flag exists.
+Flags include:
 + Deer 
 + Distracted driver 
 + Impaired driver 
@@ -64,7 +69,8 @@ import_db_data(
 + Seatbelt_flag_by_unit 
 + Suspected drug or alcohol 
 
-```{r speed flag example, echo=T}
+```{r speed flag example, echo=T, results = 'asis'}
+cat("#### Number of speed crashes")
 import_db_data(
   filepath = "C:/CSV/csv_from_sas/fst/",
   db_type = "person",
@@ -78,12 +84,15 @@ import_db_data(
 ```
 
 ## Relabel functions
+There's also functions that may summarize data for analysis.
+These include:
 + Bin crash times 
 + Bin age groups 
 + Get county names based on cntycode 
 + Bin injures into Killed, Injured, No Injury 
 
-```{r relabel example, echo=T}
+```{r relabel example, echo=T, results = 'asis'}
+cat("#### People injured")
 import_db_data(
   filepath = "C:/CSV/csv_from_sas/fst/",
   db_type = "person",
@@ -91,6 +100,9 @@ import_db_data(
   years = c("17", "18")
 ) %>% relabel_person_variables(relabel_by = "wisinj") %>% count(year = year(CRSHDATE), inj)
 ```
+## Other functions
++ Get motorcyclists 
++ Import crash narratives
 
 
 

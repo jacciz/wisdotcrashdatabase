@@ -98,8 +98,8 @@ import_db_data <-
 # Read the first row to find which columns actually exists, returns columns that exist.
 read_cols <- function(file_name, colsToKeep) {
   header <- fst::read_fst(file_name, to = 1)
-  colsToKeep <- union(c("CRSHDATE","CNTYCODE", "CRSHSVR","UNITNMBR", "ROLE","VEHTYPE","WISINJ"), colsToKeep) # Tack this on, for person db
-  # Keeps only columns found in the df
+  colsToKeep <- union(c("CRSHDATE","CNTYCODE", "CRSHSVR","UNITNMBR", "ROLE","VEHTYPE","WISINJ"), colsToKeep) # Tack this on
+  # Returns only columns found in the df
   subset(colsToKeep, colsToKeep %in% colnames(header))
 }
 

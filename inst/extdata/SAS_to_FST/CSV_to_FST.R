@@ -10,7 +10,7 @@ file_loc = "C:/Users/dotjaz/"
 
 # get all CSV file names
 myfiles = list.files(path=file_loc, pattern="*.csv", full.names=FALSE, include.dirs = FALSE)
-myfiles <- myfiles[grepl("20", myfiles)] # select only 2020 year
+# myfiles <- myfiles[grepl("20", myfiles)] # select only 2020 year
 
 
 # Locally saved sas files
@@ -53,10 +53,6 @@ save_crash_to_fst <-
     # test <- sub(pattern = "(\\d{2})$", replacement = "^\\d", filename) # but 2 digit year to front, can't figure it out
     write_fst(openfile, path = paste0(filesave, filename, ".fst"))
   }
+
+# RUN THIS
 mapply(save_crash_to_fst, filename = myfiles) # batch apply function to all myfiles
-
-old93 <- vroom::vroom("C:/Users/dotjaz/93person.csv", delim = ",")
-old13 <- vroom::vroom("C:/Users/dotjaz/13person.csv", delim = ",")
-
-old13$ACCDDATE %>% mdy()
-old93$ACCDDATE %>% mdy()

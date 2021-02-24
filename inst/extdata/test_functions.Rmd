@@ -1,0 +1,66 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This notebook reads every single function in wisdotcrashdatabase
+
+```{r}
+library(dplyr)
+library(lubridate)
+# library(fst)
+library(wisdotcrashdatabase)
+library(magrittr)
+
+# usethis::use_data(person, person, internal = TRUE)  
+# system.file("extdata", "17crash.fst", package = "fst")
+
+path ="C:/CSV/csv_from_sas/fst/"
+csv_path = "C:/CSV/csv_from_sas/from_sas_csv/"
+```
+```{r load data}
+person <- import_db_data(path, "person", years_old = "14", years = "18", columns = c("AGE","STATNM","DRVRPC","HLMTUSE","EYEPROT","DISTACT","ALCSUSP","DRUGSUSP", "DRVRDS"))
+crash <- import_db_data(path, "crash", years_old = "14", years = "18", columns = c("CRSHTYPE", "ANMLTY","VEHTYPE","CRSHTIME"))
+vehicle <- import_db_data(path, "vehicle", years_old = "14", years = "18")
+```
+```{r}
+crash %>% count(year(CRSHDATE))
+```
+
+```{r check county rename}
+county_rename(crash) %>% select(CNTYCODE, countyname)
+```
+```{r age groups}
+person %>% filter(year(CRSHDATE)>2016) %>% get_age_groups(bin_by = "5_yr") %>% select(AGE,age_group_5yr)
+person %>% filter(year(CRSHDATE)>2016) %>% get_age_groups(bin_by = "10_yr") %>% select(AGE,age_group_10yr)
+person %>% get_age_groups_old_new_db() %>% select(age_groups_both, age_groups, AGE, AGE_GROUP)
+```
+```{r alc drug}
+get_alc_drug_impaired_person(person, driver_only = "Y") %>% filter(alcohol_flag == "N") %>% count(year(CRSHDATE))
+```
+```{r crash time}
+crash %>% filter(year(CRSHDATE)>2016) %>% get_crash_times() %>% count(newtime)
+```
+```{r deer flag}
+get_deerflag_crashes(crash) %>% filter(deer_flag == "Y") %>% count(year(CRSHDATE))
+```
+
+```{r}
+person %>% filter(year(CRSHDATE)>16) %>% get_driver_flags(flags = "distracted") %>% filter(distracted_flag == "Y") %>% distinct(CRSHNMBR, .keep_all = TRUE) %>% count(year(CRSHDATE))
+person %>% get_driver_flags(flags = "speed") %>% filter(speed_flag == "Y") %>% distinct(CRSHNMBR, .keep_all = TRUE) %>% count(year(CRSHDATE))
+person %>% filter(year(CRSHDATE)>16) %>% get_driver_flags(flags = "teen") %>% filter(teendriver_flag == "Y")%>% distinct(CRSHNMBR, .keep_all = TRUE) %>% count(year(CRSHDATE))
+person %>% filter(year(CRSHDATE)>16) %>% get_driver_flags(flags = "older") %>% filter(olderdriver_flag == "Y")%>% distinct(CRSHNMBR, .keep_all = TRUE) %>% count(year(CRSHDATE))
+```
+```{r}
+get_motorcycle_persons(person, vehicle) %>% count(year(CRSHDATE),WISINJ)
+```
+```{r}
+get_seatbelt_flag_by_unit(person) %>% count(year(CRSHDATE), seatbelt_flag_unit)
+```
+```{r}
+narr <- import_narrative(csv_path, years = "17")
+```
+```{r}
+relabel_person_variables(person, "wisinj") %>% count(year(CRSHDATE), inj)
+relabel_person_variables(person, "bikeped") %>% count(year(CRSHDATE), bike_ped_role, WISINJ)
+```
