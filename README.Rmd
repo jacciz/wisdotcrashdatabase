@@ -40,13 +40,13 @@ Next, run CSV_to_FST.R. This reads the CSV files and exports as a FST. This is a
 
 Old and new database data can be imported into R via a single data frame. If 'years' for a new db is selected, then columns will have to be selected. Certain old db columns are renamed to match the new db. Some columns will always be selected (see Documentation). Import is done with one function:
 
+#### Example: Number of crashes
 ```{r example, echo=T, message=FALSE, results = 'asis'}
 library(wisdotcrashdatabase)
 library(lubridate)
 library(magrittr)
 library(dplyr)
 
-cat("#### Number of crashes")
 crash <- import_db_data(
   filepath = "C:/CSV/csv_from_sas/fst/",
   db_type = "crash",
@@ -69,8 +69,9 @@ Flags include:
 * Seatbelt_flag_by_unit 
 * Suspected drug or alcohol 
 
-```{r speed flag example, echo=T, results = 'asis'}
-cat("#### Number of speed crashes")
+#### Example: Number of speed crashes
+```{r speed flag example, echo=T}
+
 import_db_data(
   filepath = "C:/CSV/csv_from_sas/fst/",
   db_type = "person",
@@ -91,7 +92,7 @@ These include:
 * Get county names based on cntycode 
 * Bin injures into Killed, Injured, No Injury 
 
-#### People injured
+#### Example: People injured
 ```{r relabel example, echo=T}
 import_db_data(
   filepath = "C:/CSV/csv_from_sas/fst/",
@@ -104,6 +105,3 @@ import_db_data(
 ## Other functions
 * Get motorcyclists 
 * Import crash narratives
-
-
-

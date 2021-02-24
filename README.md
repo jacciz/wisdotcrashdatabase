@@ -46,18 +46,14 @@ selected. Certain old db columns are renamed to match the new db. Some
 columns will always be selected (see Documentation). Import is done with
 one function:
 
+#### Example: Number of crashes
+
 ``` r
 library(wisdotcrashdatabase)
 library(lubridate)
 library(magrittr)
 library(dplyr)
 
-cat("#### Number of crashes")
-```
-
-#### Number of crashes
-
-``` r
 crash <- import_db_data(
   filepath = "C:/CSV/csv_from_sas/fst/",
   db_type = "crash",
@@ -79,11 +75,7 @@ Deer \* Distracted driver \* Impaired driver \* Speed \* Teen driver \*
 Older driver\_flag \* Seatbelt\_flag\_by\_unit \* Suspected drug or
 alcohol
 
-``` r
-cat("#### Number of speed crashes")
-```
-
-#### Number of speed crashes
+#### Example: Number of speed crashes
 
 ``` r
 import_db_data(
@@ -96,9 +88,11 @@ import_db_data(
   filter(speed_flag == "Y") %>%
   distinct(CRSHNMBR, .keep_all = TRUE) %>%
   count(year = year(CRSHDATE))
+#>    year     n
+#> 1: 2016 19540
+#> 2: 2017 19182
+#> 3: 2018 20061
 ```
-
-year n 1: 2016 19540 2: 2017 19182 3: 2018 20061
 
 ## Relabel functions
 
@@ -106,7 +100,7 @@ There’s also functions that may summarize data for analysis. These
 include: \* Bin crash times \* Bin age groups \* Get county names based
 on cntycode \* Bin injures into Killed, Injured, No Injury
 
-#### People injured
+#### Example: People injured
 
 ``` r
 import_db_data(
