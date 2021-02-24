@@ -21,9 +21,20 @@ WisDOT.
 The package can be installed from [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("devtools")
+install.packages("devtools")
 devtools::install_github("jacciz/wisdotcrashdatabase")
 ```
+
+## Setting up environment
+
+The format data in this package must be in a .fst, while narratives are
+read as a .csv. In order to set the up, SAS code is run for each year
+and is exported to a folder of your choosing. Run the code in
+inst/extdata/SAS\_to\_FST/ to do this. Data for each year must be run.
+Place all data in the same folder.
+
+Next, run CSV\_to\_FST.R. This reads the CSV files and exports as a FST.
+This is a batch job and can be run only once.
 
 ## Importing data
 
@@ -32,114 +43,89 @@ frame. If new db is selected, then columns will have to be selected.
 Certain old db columns are renamed to match the new db. Import is done
 with one function:
 
-    #> 
-    #> Attaching package: 'dplyr'
-    #> The following objects are masked from 'package:stats':
-    #> 
-    #>     filter, lag
-    #> The following objects are masked from 'package:base':
-    #> 
-    #>     intersect, setdiff, setequal, union
-    #>     CRSHNMBR   CRSHDATE         CRSHSVR CRSHTIME_GROUP MUNICODE CNTYCODE
-    #> 1: 170700471 2017-07-03          Injury           <NA>     <NA>     <NA>
-    #> 2: 170311367 2017-03-07 Property Damage           <NA>     <NA>     <NA>
-    #> 3: 170808687 2017-08-26 Property Damage           <NA>     <NA>     <NA>
-    #> 4: 170602026 2017-06-06 Property Damage           <NA>     <NA>     <NA>
-    #> 5: 171207544 2017-12-19 Property Damage           <NA>     <NA>     <NA>
-    #> 6: 171106421 2017-11-15 Property Damage           <NA>     <NA>     <NA>
-    #>    MUNITYPE POPCLASS CRSHMTH DAYNMBR TOTINJ TOTFATL TOTVEH TOTUNIT CRSHTYPE
-    #> 1:     <NA>     <NA>    <NA>    <NA>     NA      NA     NA      NA     <NA>
-    #> 2:     <NA>     <NA>    <NA>    <NA>     NA      NA     NA      NA     <NA>
-    #> 3:     <NA>     <NA>    <NA>    <NA>     NA      NA     NA      NA     <NA>
-    #> 4:     <NA>     <NA>    <NA>    <NA>     NA      NA     NA      NA     <NA>
-    #> 5:     <NA>     <NA>    <NA>    <NA>     NA      NA     NA      NA     <NA>
-    #> 6:     <NA>     <NA>    <NA>    <NA>     NA      NA     NA      NA     <NA>
-    #>    LGTCOND WTHRCOND ROADCOND MNRCOLL HWYCLASS URBRURAL ONHWY ONHWYDIR ONHWYTYP
-    #> 1:    <NA>     <NA>     <NA>    <NA>     <NA>     <NA>  <NA>     <NA>     <NA>
-    #> 2:    <NA>     <NA>     <NA>    <NA>     <NA>     <NA>  <NA>     <NA>     <NA>
-    #> 3:    <NA>     <NA>     <NA>    <NA>     <NA>     <NA>  <NA>     <NA>     <NA>
-    #> 4:    <NA>     <NA>     <NA>    <NA>     <NA>     <NA>  <NA>     <NA>     <NA>
-    #> 5:    <NA>     <NA>     <NA>    <NA>     <NA>     <NA>  <NA>     <NA>     <NA>
-    #> 6:    <NA>     <NA>     <NA>    <NA>     <NA>     <NA>  <NA>     <NA>     <NA>
-    #>    ONSTR RPNMBR RPDIS ATSTR ATHWY ATHWYDIR ATHWYTYP ATNMBR ATCODE INTDIR INTDIS
-    #> 1:  <NA>     NA    NA  <NA>  <NA>     <NA>     <NA>   <NA>   <NA>   <NA>     NA
-    #> 2:  <NA>     NA    NA  <NA>  <NA>     <NA>     <NA>   <NA>   <NA>   <NA>     NA
-    #> 3:  <NA>     NA    NA  <NA>  <NA>     <NA>     <NA>   <NA>   <NA>   <NA>     NA
-    #> 4:  <NA>     NA    NA  <NA>  <NA>     <NA>     <NA>   <NA>   <NA>   <NA>     NA
-    #> 5:  <NA>     NA    NA  <NA>  <NA>     <NA>     <NA>   <NA>   <NA>   <NA>     NA
-    #> 6:  <NA>     NA    NA  <NA>  <NA>     <NA>     <NA>   <NA>   <NA>   <NA>     NA
-    #>    BUSPNTR RPTBFLAG FIREFLAG CONSZONE GOVTPROP MATLSPIL NARRFLAG PHOTFLAG
-    #> 1:    <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>
-    #> 2:    <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>
-    #> 3:    <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>
-    #> 4:    <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>
-    #> 5:    <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>
-    #> 6:    <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>
-    #>    TRLRPNTR WITFLAG HITRUN HWYDIST STPTLNB AGCYNMBR ACSCNTL RLTNRDWY ROADHOR
-    #> 1:     <NA>    <NA>   <NA>      NA    <NA>     <NA>    <NA>     <NA>    <NA>
-    #> 2:     <NA>    <NA>   <NA>      NA    <NA>     <NA>    <NA>     <NA>    <NA>
-    #> 3:     <NA>    <NA>   <NA>      NA    <NA>     <NA>    <NA>     <NA>    <NA>
-    #> 4:     <NA>    <NA>   <NA>      NA    <NA>     <NA>    <NA>     <NA>    <NA>
-    #> 5:     <NA>    <NA>   <NA>      NA    <NA>     <NA>    <NA>     <NA>    <NA>
-    #> 6:     <NA>    <NA>   <NA>      NA    <NA>     <NA>    <NA>     <NA>    <NA>
-    #>    ROADVERT TRFCWAY LATDEG LATMIN LONDEG LONMIN LATSEC LONSEC LONDECDG LATDECDG
-    #> 1:     <NA>    <NA>     NA     NA     NA     NA     NA     NA       NA       NA
-    #> 2:     <NA>    <NA>     NA     NA     NA     NA     NA     NA       NA       NA
-    #> 3:     <NA>    <NA>     NA     NA     NA     NA     NA     NA       NA       NA
-    #> 4:     <NA>    <NA>     NA     NA     NA     NA     NA     NA       NA       NA
-    #> 5:     <NA>    <NA>     NA     NA     NA     NA     NA     NA       NA       NA
-    #> 6:     <NA>    <NA>     NA     NA     NA     NA     NA     NA       NA       NA
-    #>    URBCLASS NTFYDATE ENFTYPE ENFNAME JRSDTN ARHOUR ARMIN NTFYHOUR NTFYMIN
-    #> 1:     <NA>     <NA>    <NA>    <NA>   <NA>     NA    NA       NA      NA
-    #> 2:     <NA>     <NA>    <NA>    <NA>   <NA>     NA    NA       NA      NA
-    #> 3:     <NA>     <NA>    <NA>    <NA>   <NA>     NA    NA       NA      NA
-    #> 4:     <NA>     <NA>    <NA>    <NA>   <NA>     NA    NA       NA      NA
-    #> 5:     <NA>     <NA>    <NA>    <NA>   <NA>     NA    NA       NA      NA
-    #> 6:     <NA>     <NA>    <NA>    <NA>   <NA>     NA    NA       NA      NA
-    #>    OFFRID CITFLAG ALCFLAG DRUGFLAG MCFLNMBR DOCTNMBR OPCODE SPCL1 SPCL2 SPCL3
-    #> 1:   <NA>    <NA>    <NA>     <NA>     <NA>     <NA>   <NA>    NA    NA    NA
-    #> 2:   <NA>    <NA>    <NA>     <NA>     <NA>     <NA>   <NA>    NA    NA    NA
-    #> 3:   <NA>    <NA>    <NA>     <NA>     <NA>     <NA>   <NA>    NA    NA    NA
-    #> 4:   <NA>    <NA>    <NA>     <NA>     <NA>     <NA>   <NA>    NA    NA    NA
-    #> 5:   <NA>    <NA>    <NA>     <NA>     <NA>     <NA>   <NA>    NA    NA    NA
-    #> 6:   <NA>    <NA>    <NA>     <NA>     <NA>     <NA>   <NA>    NA    NA    NA
-    #>    SPCL4 TRKFLAG AUTOFLAG CYCLFLAG MOPFLAG PEDFLAG BUSFLAG BIKEFLAG TRLRFLAG
-    #> 1:    NA    <NA>     <NA>     <NA>    <NA>    <NA>    <NA>     <NA>     <NA>
-    #> 2:    NA    <NA>     <NA>     <NA>    <NA>    <NA>    <NA>     <NA>     <NA>
-    #> 3:    NA    <NA>     <NA>     <NA>    <NA>    <NA>    <NA>     <NA>     <NA>
-    #> 4:    NA    <NA>     <NA>     <NA>    <NA>    <NA>    <NA>     <NA>     <NA>
-    #> 5:    NA    <NA>     <NA>     <NA>    <NA>    <NA>    <NA>     <NA>     <NA>
-    #> 6:    NA    <NA>     <NA>     <NA>    <NA>    <NA>    <NA>     <NA>     <NA>
-    #>    CMVFLAG
-    #> 1:    <NA>
-    #> 2:    <NA>
-    #> 3:    <NA>
-    #> 4:    <NA>
-    #> 5:    <NA>
-    #> 6:    <NA>
+``` r
+library(wisdotcrashdatabase)
+library(lubridate)
+#> 
+#> Attaching package: 'lubridate'
+#> The following objects are masked from 'package:base':
+#> 
+#>     date, intersect, setdiff, union
+library(magrittr)
+library(dplyr)
+#> 
+#> Attaching package: 'dplyr'
+#> The following objects are masked from 'package:stats':
+#> 
+#>     filter, lag
+#> The following objects are masked from 'package:base':
+#> 
+#>     intersect, setdiff, setequal, union
+
+import_db_data(
+  filepath = "C:/CSV/csv_from_sas/fst/",
+  db_type = "crash",
+  years_old = c("15", "16"),
+  years = c("17", "18")
+) %>% count(year(CRSHDATE))
+#>    year(CRSHDATE)      n
+#> 1:           2015 121613
+#> 2:           2016 129051
+#> 3:           2017 139870
+#> 4:           2018 144212
+```
 
 ## Crash flags
 
-Flags can be found: + deer\_flag (old & new db) + distracted\_flag (new
-db) + impaireddriver\_flag (new db) + speed\_flag (old & new db) +
-teendriver\_flag (new db) + olderdriver\_flag (new db) +
-get\_seatbelt\_flag\_by\_unit + get\_drug\_alc\_suspected
+-   Deer
+-   Distracted driver
+-   Impaired driver
+-   Speed
+-   Teen driver
+-   Older driver\_flag
+-   Seatbelt\_flag\_by\_unit
+-   Suspected drug or alcohol
 
 ``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
+import_db_data(
+  filepath = "C:/CSV/csv_from_sas/fst/",
+  db_type = "person",
+  years_old = c("16"),
+  years = c("17", "18"),
+  columns = c("STATNM", "DRVRPC")
+) %>% get_driver_flags (flags = "speed") %>%
+  filter(speed_flag == "Y") %>%
+  distinct(CRSHNMBR, .keep_all = TRUE) %>%
+  count(year = year(CRSHDATE))
+#>    year     n
+#> 1: 2016 19540
+#> 2: 2017 19182
+#> 3: 2018 20061
 ```
 
 ## Relabel functions
 
--   get\_crash\_times(any\_df) - newtime
--   get\_age\_groups(person\_df) - age\_group
--   county\_rename(any\_df) - countyname
--   bin\_injury\_persons(person\_df) - inj - bins into Killed, Injured,
-    No Injury
+-   Bin crash times
+-   Bin age groups
+-   Get county names based on cntycode
+-   Bin injures into Killed, Injured, No Injury
+
+``` r
+import_db_data(
+  filepath = "C:/CSV/csv_from_sas/fst/",
+  db_type = "person",
+  years_old = c("16"),
+  years = c("17", "18")
+) %>% relabel_person_variables(relabel_by = "wisinj") %>% count(year = year(CRSHDATE), inj)
+#> Joining, by = "WISINJ"
+#>    year       inj      n
+#> 1: 2016   Injured  43669
+#> 2: 2016    Killed    588
+#> 3: 2016 No Injury 240916
+#> 4: 2017   Injured  42178
+#> 5: 2017    Killed    594
+#> 6: 2017 No Injury 248072
+#> 7: 2018   Injured  41124
+#> 8: 2018    Killed    576
+#> 9: 2018 No Injury 255579
+```
