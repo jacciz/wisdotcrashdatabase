@@ -2,20 +2,21 @@
 % Please edit documentation in R/get_crashflags_person.R
 \name{get_seatbelt_flag_by_unit}
 \alias{get_seatbelt_flag_by_unit}
-\title{Get seatbelt flag}
+\title{Get seatbelt flag (new db)}
 \usage{
 get_seatbelt_flag_by_unit(person_df)
 }
 \arguments{
-\item{person_df}{data frame of person, must have DISTACT, DRVRDS}
+\item{person_df}{person dataframe}
 }
 \value{
-person_df with seatbelt_flag_unit ("Y" or "N")
+A new column \emph{seatbelt_flag_unit} ("Y" or "N")
 }
 \description{
 Finds if a person in a unit was not wearing a seatbelt. For example, a
 passenger not wearing a seatbelt, every person in that unit would get a seat
-belt flag. This includes the drivers and other passengers, if any. Need SFTYEQP, EYEPROT, HLMTUSE, UNITNMBR.
+belt flag. This includes the drivers and other passengers, if any. Need
+\strong{SFTYEQP}, \strong{EYEPROT} and \strong{HLMTUSE}.
 }
 \examples{
 \dontrun{get_seatbelt_flag_by_unit(person17)}

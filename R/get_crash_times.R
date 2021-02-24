@@ -1,9 +1,9 @@
-# adds new column called newtime that gives crash hour
-#' Get crash hour
+#' Get crash hour (new db)
 #'
+#' Adds a new column that gives crash hour.
 #' @param dataframe dataframe
 #'
-#' @return Adds a column 'newtime' with crash hour. i.e. "12am"
+#' @return A new column called \emph{newtime} with crash hour. i.e. "12am"
 #' @export
 #'
 #' @examples

@@ -10,8 +10,11 @@
 # usethis::use_test("read_cols") to test functions (use Build pane)
 
 # devtools::build_readme() # Render readme.md
-# devtools::build_manual() # Render PDF manual
+#  devtools::build_manual(path = "c:/W_shortcut/wisdotcrashdatabase")path = "c:/W_shortcut/wisdotcrashdatabase") # Render PDF manual
 # R CMD Rd2pdf c:/W_shortcut/wisdotcrashdatabase
+#tinytex::latexmk()
+# tinytex::latexmk("C:/W_shortcut/wisdotcrashdatabase/.Rd2pdf21644/Rd2.tex")
+# devtools::build(manual = TRUE) # builds a tar.gz
 # ctrl shift / -makes everything 80 characters
 
 # importFrom dplyr left_join filter mutate
@@ -22,7 +25,7 @@
 #
 # Edit one or more files below R/.
 # devtools::document() (if you’ve made any changes that impact help files or NAMESPACE)
-# devtools::load_all()
+# devtools::load_all() # load package into env
 # Run some examples interactively.
 # devtools::test()
 # test() (or test_file())

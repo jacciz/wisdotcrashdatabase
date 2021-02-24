@@ -27,39 +27,39 @@ This package will never be released to CRAN as it's used internally at WisDOT.
 The package can be installed from [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("devtools")
+install.packages("devtools")
 devtools::install_github("jacciz/wisdotcrashdatabase")
 ```
 ## Importing data
 
 Old and new database data can be uploaded and imported via a single data frame. If new db is selected, then columns will have to be selected. Certain old db columns are renamed to match the new db. Import is done with one function:
 
-```{r example, echo=FALSE}
+```{r example}
 library(wisdotcrashdatabase)
-library(dplyr)
-import_db_data(filepath = "C:/CSV/csv_from_sas/fst/", db_type = "crash", years_old = c("15", "16"), years = c("17","18"),  columns = c("DRVRPC")) %>% head()
 
+import_db_data(filepath = "C:/CSV/csv_from_sas/fst/", db_type = "crash", years_old = c("15", "16"), years = c("17","18")) %>% count(year(CRSHDATE))
 ```
 
 ## Crash flags
-Flags can be found:
-+ deer_flag (old & new db) 
-+ distracted_flag (new db) 
-+ impaireddriver_flag (new db) 
-+ speed_flag (old & new db) 
-+ teendriver_flag (new db) 
-+ olderdriver_flag (new db)
-+ get_seatbelt_flag_by_unit
-+ get_drug_alc_suspected 
++ Deer 
++ Distracted driver 
++ Impaired driver 
++ Speed 
++ Teen driver 
++ Older driver_flag 
++ Seatbelt_flag_by_unit 
++ Suspected drug or alcohol 
 
-```{r cars}
-summary(cars)
-```
 ## Relabel functions
-+ get_crash_times(any_df) - newtime
-+ get_age_groups(person_df) - age_group
-+ county_rename(any_df) - countyname
-+ bin_injury_persons(person_df) - inj - bins into Killed, Injured, No Injury
++ Bin crash times 
++ Bin age groups 
++ Get county names based on cntycode 
++ Bin injures into Killed, Injured, No Injury 
+
+```{r}
+import_db_data(filepath = "C:/CSV/csv_from_sas/fst/", db_type = "person", years_old = c("16"), years = c("17","18")) %>% relabel_person_variables(relabel_by = "wisinj") %>% count(year(CRSHDATE), inj)
+```
+
 
 
 

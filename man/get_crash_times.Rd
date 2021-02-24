@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_crash_times.R
 \name{get_crash_times}
 \alias{get_crash_times}
-\title{Get crash hour}
+\title{Get crash hour (new db)}
 \usage{
 get_crash_times(dataframe)
 }
@@ -10,10 +10,10 @@ get_crash_times(dataframe)
 \item{dataframe}{dataframe}
 }
 \value{
-Adds a column 'newtime' with crash hour. i.e. "12am"
+A new column called \emph{newtime} with crash hour. i.e. "12am"
 }
 \description{
-Get crash hour
+Adds a new column that gives crash hour.
 }
 \examples{
 \dontrun{get_crash_times(crash17)}

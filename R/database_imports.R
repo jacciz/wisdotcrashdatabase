@@ -1,34 +1,35 @@
 #' Import crash, vehicle, person from crash database
 #'
-#' This imports all data based on data type, years selected, and columns
-#' selected. Combines old and new crash data into a single dataframe. If an old
-#' db is imported, all columns will be automatically selected.
-#'
-#' For the new db, "CRSHNMBR", "CRSHDATE", "CRSHSVR" are defaulted.
-#' selected_columns allows to import additional columns. "UNITNMBR",
-#' "ROLE","VEHTYPE","WISINJ"
+#' This imports all data based on crash db type, years selected, and columns
+#' selected. It combines old and new crash data into a single dataframe. It
+#' renames columns of the old db to match db and renames some variables, such as
+#' CRSHSVR, to match new db. Note: if an old db is imported, all columns will be
+#' automatically selected.
 #' @importFrom magrittr %>%
 #' @param filepath path where CSVs are stored (must all be in this folder)
 #' @param db_type Type of database - any one of "crash", "vehicle", or "person"
-#' @param years Year(s) of data c("20", "21"). Must be "17" or higher.
-#' @param years_old Year(s) of data c("16"). Must be "16" or lower.
-#' @param columns Only if years_selected is not empty. These are columns to be
-#'   selected. CRSHNMBR,CRSHDATE are automatically included. Columns with
-#'   multiples, like DRVRPC, need only part w/o number.
+#' @param years Year(s) of new db data c("20", "21"). Must be "17" or higher.
+#' @param years_old Year(s) of old db data c("16"). Must be "16" or lower.
+#' @param columns Columns to be imported. For the new db these columns will
+#'   always be imported (if applicable): "CRSHNMBR", "CRSHDATE", "CNTYCODE
+#'   ,"CRSHSVR", "UNITNMBR", "ROLE","VEHTYPE","WISINJ". Columns with multiples,
+#'   like DRVRPC and ANMLTY, only the first part without the number should be
+#'   inputted. For old db, all columns will be imported.
 #'
-#' @return data frame of db_type
+#' @return dataframe of either crash, vehicle or person
 #' @export
 #'
 #' @examples
 #' import_db_data(filepath = "C:/CSV/csv_from_sas/fst/", db_type = "crash",
 #'   years_old = c("15", "16"), years = c("17","18"),  columns = c("DRVRPC"))
-#' \dontrun{import_db_data(csv_path, "person", years_selected = "20")}
+#' \dontrun{import_db_data(csv_path, "person", years = "20")}
 import_db_data <-
   function(filepath,
            db_type,
            years_old = c(),
            years = c(),
-           columns = c("CRSHTIME")) {
+           columns = c()) {
+    # If years were selected, open new db data
     if (length(years) != 0) {
     data_years = paste(years, db_type, sep = "") # combines crashes with years to select data
     df = paste(filepath, data_years, ".fst", sep = "") # select data in specified location/format
@@ -40,6 +41,7 @@ import_db_data <-
     } else {
       df_new = data.frame()
     }
+    # If years_old was selected, open old db data
     if (length(years_old) != 0) {
     data_years_old = paste(years_old, db_type, sep = "") # combines crashes with years to select data
     df_old = paste(filepath, data_years_old, ".fst", sep = "") # select data in specified location/format
@@ -51,6 +53,7 @@ import_db_data <-
       ) %>% dplyr::select(-.data$ACCDLOC)
     df_old <-
       data.table::setnames(
+        # Rename columns to match with new db
         df_old,
         skip_absent=TRUE,  # skip if column does not exist
         c(
@@ -62,7 +65,9 @@ import_db_data <-
           "ACCDSVR",
           "ACCDTYPE",
           "AGE",
-          "INJSVR"
+          "INJSVR",
+          "ALCFLAG",
+          "DRUGFLAG"
         ),
         c(
           "CRSHNMBR",
@@ -73,7 +78,9 @@ import_db_data <-
           "CRSHSVR",
           "CRSHTYPE",
           "AGE_GROUP",
-          "WISINJ"
+          "WISINJ",
+          "ALCSUSP",
+          "DRUGSUSP"
         )
       ) %>% relabel_CRSHSVR_old_db() # for person relabel_WISINJ_old_db())
     if (db_type == "person") {
@@ -91,7 +98,7 @@ import_db_data <-
 # Read the first row to find which columns actually exists, returns columns that exist.
 read_cols <- function(file_name, colsToKeep) {
   header <- fst::read_fst(file_name, to = 1)
-  colsToKeep <- union(c("UNITNMBR", "ROLE","VEHTYPE","WISINJ"), colsToKeep) # Tack this on, for person db
+  colsToKeep <- union(c("CRSHDATE","CNTYCODE", "CRSHSVR","UNITNMBR", "ROLE","VEHTYPE","WISINJ"), colsToKeep) # Tack this on, for person db
   # Keeps only columns found in the df
   subset(colsToKeep, colsToKeep %in% colnames(header))
 }
@@ -120,15 +127,15 @@ read_fst_for_new_db <- function(file_to_read, col_to_select) {
                formatC(seq(1, 20), width = 2, flag = "0")) %>% as.character()
 
       col_to_select <- Reduce(union,
-             list(c("CRSHNMBR", "CRSHDATE", "CRSHSVR"),
+             list(c("CRSHNMBR"),
                   col_to_select,
                   get_all_names))
     } else {
       col_to_select <-
-        union(c("CRSHNMBR", "CRSHDATE", "CRSHSVR"), col_to_select)
+        union(c("CRSHNMBR"), col_to_select)
     }
   } else {
-    col_to_select <- c("CRSHNMBR", "CRSHDATE", "CRSHSVR")
+    col_to_select <- c("CRSHNMBR")
   }
 
   found_columns <- read_cols(file_to_read, col_to_select)

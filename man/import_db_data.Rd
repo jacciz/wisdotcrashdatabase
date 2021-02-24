@@ -4,42 +4,35 @@
 \alias{import_db_data}
 \title{Import crash, vehicle, person from crash database}
 \usage{
-import_db_data(
-  filepath,
-  db_type,
-  years_old = c(),
-  years = c(),
-  columns = c("CRSHTIME")
-)
+import_db_data(filepath, db_type, years_old = c(), years = c(), columns = c())
 }
 \arguments{
 \item{filepath}{path where CSVs are stored (must all be in this folder)}
 
 \item{db_type}{Type of database - any one of "crash", "vehicle", or "person"}
 
-\item{years_old}{Year(s) of data c("16"). Must be "16" or lower.}
+\item{years_old}{Year(s) of old db data c("16"). Must be "16" or lower.}
 
-\item{years}{Year(s) of data c("20", "21"). Must be "17" or higher.}
+\item{years}{Year(s) of new db data c("20", "21"). Must be "17" or higher.}
 
-\item{columns}{Only if years_selected is not empty. These are columns to be
-selected. CRSHNMBR,CRSHDATE are automatically included. Columns with
-multiples, like DRVRPC, need only part w/o number.}
+\item{columns}{Columns to be imported. For the new db these columns will
+always be imported (if applicable): "CRSHNMBR", "CRSHDATE", "CNTYCODE
+,"CRSHSVR", "UNITNMBR", "ROLE","VEHTYPE","WISINJ". Columns with multiples,
+like DRVRPC and ANMLTY, only the first part without the number should be
+inputted. For old db, all columns will be imported.}
 }
 \value{
-data frame of db_type
+dataframe of either crash, vehicle or person
 }
 \description{
-This imports all data based on data type, years selected, and columns
-selected. Combines old and new crash data into a single dataframe. If an old
-db is imported, all columns will be automatically selected.
-}
-\details{
-For the new db, "CRSHNMBR", "CRSHDATE", "CRSHSVR" are defaulted.
-selected_columns allows to import additional columns. "UNITNMBR",
-"ROLE","VEHTYPE","WISINJ"
+This imports all data based on crash db type, years selected, and columns
+selected. It combines old and new crash data into a single dataframe. It
+renames columns of the old db to match db and renames some variables, such as
+CRSHSVR, to match new db. Note: if an old db is imported, all columns will be
+automatically selected.
 }
 \examples{
 import_db_data(filepath = "C:/CSV/csv_from_sas/fst/", db_type = "crash",
   years_old = c("15", "16"), years = c("17","18"),  columns = c("DRVRPC"))
-\dontrun{import_db_data(csv_path, "person", years_selected = "20")}
+\dontrun{import_db_data(csv_path, "person", years = "20")}
 }

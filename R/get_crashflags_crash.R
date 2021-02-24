@@ -1,9 +1,9 @@
-#' Get deer flag for deer crashes
+#' Get flag for deer crashes (old and new db)
 #'
-#' Need CRSHTYPE and ANMLTY.
+#' This finds if a crash involved a deer. Need \strong{CRSHTYPE} and \strong{ANMLTY}.
 #' @param crash_df crash dataframe
 #'
-#' @return crash dataframe with deer_flag column ("Y" or "N")
+#' @return A new column called \emph{deer_flag} ("Y" or "N")
 #' @export
 #' @examples
 #' \dontrun{get_deerflag_crashes(crash17)}

@@ -3,7 +3,7 @@
 #' Import crash narratives.
 #' @inheritParams import_db_data
 #'
-#' @return crash narratives dataframe
+#' @return dataframe of crash narratives
 #' @export
 #'
 #' @examples

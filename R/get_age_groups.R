@@ -1,26 +1,26 @@
-#' Get age groups
+#' Bin age groups by 5 or 10 years (new db)
 #'
-#' Gets a new column that bins ages by 5 years or 10 years.
+#' This bins ages into age groups by 5 years or 10 years.
 #' @inheritParams get_driver_flags
-#' @param group_by "5_yr" or "10_yr"
+#' @param bin_by select either "5_yr" or "10_yr"
 #'
-#' @return age_group_5yr or age_group_10yr
+#' @return A new column called \emph{age_group_5yr} or \emph{age_group_10yr}
 #' @export
 #'
 #' @examples
 #' \dontrun{get_age_groups(person17, group_by = "10_yr"}
 get_age_groups <- function(person_df,
-                           group_by = "5_yr") {
-  if (group_by == "5_yr") {
+                           bin_by = "5_yr") {
+  if (bin_by == "5_yr") {
     return(age_group_5yr(person_df))
   }
-  if (group_by == "10_yr") {
+  if (bin_by == "10_yr") {
     return(age_group_10yr(person_df))
   }
 }
 
 age_group_5yr <- function(person_df) {
-  person_df %>% dplyr::mutate(age_group_5yr = cut(
+  person_df <- person_df %>% dplyr::mutate(age_group_5yr = cut(
     # add age_group column, 5 year intervals
     .data$person_df$AGE,
     right = FALSE,

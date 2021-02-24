@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_motorcyclists.R
 \name{get_motorcycle_persons}
 \alias{get_motorcycle_persons}
-\title{Get motorcyclists}
+\title{Get motorcyclists (old and new db)}
 \usage{
 get_motorcycle_persons(person_df, vehicle_df)
 }
@@ -12,10 +12,10 @@ get_motorcycle_persons(person_df, vehicle_df)
 \item{vehicle_df}{vehicle dataframe}
 }
 \value{
-all motorcyclists
+Only motorcyclists in a crash
 }
 \description{
-Need VEHTYPE and UNITNMBR.
+This finds if a person was a motorcyclist (driver or passenger).
 }
 \examples{
 \dontrun{get_motorcycle_persons(person17, vehicle17)}

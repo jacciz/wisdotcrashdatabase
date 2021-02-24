@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_crashflags_person.R
 \name{get_alc_drug_impaired_person}
 \alias{get_alc_drug_impaired_person}
-\title{Get alcohol or drug person, or by driver}
+\title{Get flag for a suspected alcohol or drug person (old and new db)}
 \usage{
 get_alc_drug_impaired_person(
   person_df,
@@ -12,19 +12,21 @@ get_alc_drug_impaired_person(
 )
 }
 \arguments{
-\item{person_df}{data frame of person, must have DISTACT, DRVRDS}
+\item{person_df}{person dataframe}
 
-\item{driver_only}{role as driver?}
+\item{driver_only}{Select for role as driver only ("Y" or"N")}
 
-\item{include_alc}{suspected alcohol?}
+\item{include_alc}{Select to include suspected alcohol ("Y" or"N")}
 
-\item{include_drug}{suspected drug?}
+\item{include_drug}{Select to include suspected drug ("Y" or"N")}
 }
 \value{
-same person_df with drug_flag or alcohol_flag
+A new column called \emph{drug_flag} or \emph{alcohol_flag}. Values
+are "Y","N", and "U" for unknowm. If \emph{driver_only} = "Y", then only
+drivers will return.
 }
 \description{
-Get alcohol or drug person, or by driver
+This looks to see if a person was suspected of alcohol or drug use.
 }
 \examples{
 \dontrun{get_alc_drug_impaired_person(person17, include_alc = "N")}

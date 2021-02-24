@@ -2,18 +2,21 @@
 % Please edit documentation in R/get_county_name.R
 \name{county_rename}
 \alias{county_rename}
-\title{Get county name from CNTYCODE}
+\title{Get full county name}
 \usage{
-county_rename(any_df)
+county_rename(any_df, county_col = "CNTYCODE")
 }
 \arguments{
 \item{any_df}{person, crash, or vehicle dataframe}
+
+\item{county_col}{column that has the county code}
 }
 \value{
-Same dataframe, countyname column
+A new column called \emph{countyname}
 }
 \description{
-CNTYCODE must be an integer.
+This looks at the county code and returns a new column \emph{countyname} of the full
+county name.
 }
 \examples{
 \dontrun{county_rename(vehicle17)}

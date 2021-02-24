@@ -2,21 +2,24 @@
 % Please edit documentation in R/get_crashflags_person.R
 \name{relabel_person_variables}
 \alias{relabel_person_variables}
-\title{Relabels data in person}
+\title{Relabels WISINJ and ROLE in person}
 \usage{
 relabel_person_variables(person_df, relabel_by = "wisinj")
 }
 \arguments{
-\item{person_df}{data frame of person, must have DISTACT, DRVRDS}
+\item{person_df}{person dataframe}
 
-\item{relabel_by}{"wisinj", "bikeped"}
+\item{relabel_by}{either by "wisinj" or "bikeped"}
 }
 \value{
-person_df with new column(s)
+A new column of either/all \emph{inj} or \emph{bike_ped_role}
 }
 \description{
 This bins certain variables by recategorizing and making a new column. This
-is useful when working with data from an old and new database.
+is useful when working with data from an old and new database or when wanting
+to have fewer categories. "wisinj" bins \emph{WISINJ} into "No Injury",
+"Injured", and "Killed". "bikeped" bins \emph{ROLE} of bicyclists and
+pedestrians.
 }
 \examples{
 \dontrun{system.file("extdata", "17person.fst", package = "fst") \%>\%

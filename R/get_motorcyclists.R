@@ -1,10 +1,10 @@
-#' Get motorcyclists
+#' Get motorcyclists (old and new db)
 #'
-#' Need VEHTYPE and UNITNMBR.
-#' @param person_df person dataframe
+#' This finds if a person was a motorcyclist (driver or passenger).
+#' @inheritParams get_driver_flags
 #' @param vehicle_df vehicle dataframe
 #'
-#' @return all motorcyclists
+#' @return Only motorcyclists in a crash
 #' @export
 #'
 #' @examples

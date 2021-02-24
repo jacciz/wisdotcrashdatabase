@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_crashflags_crash.R
 \name{get_deerflag_crashes}
 \alias{get_deerflag_crashes}
-\title{Get deer flag for deer crashes}
+\title{Get flag for deer crashes (old and new db)}
 \usage{
 get_deerflag_crashes(crash_df)
 }
@@ -10,10 +10,10 @@ get_deerflag_crashes(crash_df)
 \item{crash_df}{crash dataframe}
 }
 \value{
-crash dataframe with deer_flag column ("Y" or "N")
+A new column called \emph{deer_flag} ("Y" or "N")
 }
 \description{
-Need CRSHTYPE and ANMLTY.
+This finds if a crash involved a deer. Need \strong{CRSHTYPE} and \strong{ANMLTY}.
 }
 \examples{
 \dontrun{get_deerflag_crashes(crash17)}

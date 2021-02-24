@@ -2,22 +2,26 @@
 % Please edit documentation in R/get_crashflags_person.R
 \name{get_driver_flags}
 \alias{get_driver_flags}
-\title{Get driver flags}
+\title{Get driver flags - speed, distracted, teen, older}
 \usage{
 get_driver_flags(person_df, flags)
 }
 \arguments{
-\item{person_df}{data frame of person, must have DISTACT, DRVRDS}
+\item{person_df}{person dataframe}
 
-\item{flags}{flags to select ("distracted","speed","teen","older")}
+\item{flags}{select either/all ("distracted","speed","teen","older")}
 }
 \value{
-Adds a column of selected flags with distracted_flag ("Y" or "N")
+Returns only drivers. Adds a column of selected flag(s) with
+\emph{speed_flag}, \emph{distracted_flag}, \emph{teendriver_flag}, and
+\emph{olderdriver_flag}. ("Y" or "N")
 }
 \description{
-This adds a column(s) of certain crash flags. It will only add a flag to
-where there is a driver. Driver flags are: distracted, speed, teen, and
-older.
+This adds a column(s) of certain crash flags. Driver flags are: distracted,
+speed, teen, and older. Speed can be for both old and new db. Rest are for
+new db only. Must have \strong{DRVRPC} and \strong{STATNM} for speed.
+\strong{DISTACT} and \strong{DRVRDS} for distracted. \strong{AGE} for teen
+and older.
 }
 \examples{
 \dontrun{get_driver_flags(person_df, flags = c("teen", "distracted"))}

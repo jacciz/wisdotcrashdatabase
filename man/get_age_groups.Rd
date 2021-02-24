@@ -2,20 +2,20 @@
 % Please edit documentation in R/get_age_groups.R
 \name{get_age_groups}
 \alias{get_age_groups}
-\title{Get age groups}
+\title{Bin age groups by 5 or 10 years (new db)}
 \usage{
-get_age_groups(person_df, group_by = "5_yr")
+get_age_groups(person_df, bin_by = "5_yr")
 }
 \arguments{
-\item{person_df}{data frame of person, must have DISTACT, DRVRDS}
+\item{person_df}{person dataframe}
 
-\item{group_by}{"5_yr" or "10_yr"}
+\item{bin_by}{select either "5_yr" or "10_yr"}
 }
 \value{
-age_group_5yr or age_group_10yr
+A new column called \emph{age_group_5yr} or \emph{age_group_10yr}
 }
 \description{
-Gets a new column that bins ages by 5 years or 10 years.
+This bins ages into age groups by 5 years or 10 years.
 }
 \examples{
 \dontrun{get_age_groups(person17, group_by = "10_yr"}

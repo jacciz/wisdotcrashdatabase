@@ -7,7 +7,9 @@ Authors@R:
            role = c("aut", "cre"),
            email = "jaclyn.ziebert@dot.wi.gov",
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: This makes importing data into R much easier. Imports data, transforms old database columns to match new database, gets many crash flags.
+Description: The goal of wisdotcrashdatabase is to make data pulls and data analysis on the crash database
+    much easier in an R environment. Importing data is done by one function and can output old and new db
+    into a single dataframe. There are functions to easily recall crash flags, to bin variables for analysis.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -24,6 +26,7 @@ Imports:
     expss,
     fst,
     magrittr,
+    stats,
     stringr,
     tidyr,
     utils
