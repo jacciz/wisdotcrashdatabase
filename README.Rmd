@@ -41,7 +41,7 @@ Next, run CSV_to_FST.R. This reads the CSV files and exports as a FST. This is a
 Old and new database data can be imported into R via a single data frame. If 'years' for a new db is selected, then columns will have to be selected. Certain old db columns are renamed to match the new db. Some columns will always be selected (see Documentation). Import is done with one function:
 
 #### Example: Number of crashes
-```{r example, echo=T, message=FALSE, results = 'asis'}
+```{r example, echo=T, message=FALSE}
 library(wisdotcrashdatabase)
 library(lubridate)
 library(magrittr)
@@ -60,6 +60,7 @@ crash %>% count(year(CRSHDATE))
 ## Crash flags
 There are also functions to get crash flags. When run, a new column is added with either a "Y" or "N" if that flag exists.
 Flags include:
+
 * Deer 
 * Distracted driver 
 * Impaired driver 
@@ -87,6 +88,7 @@ import_db_data(
 ## Relabel functions
 There's also functions that may summarize data for analysis.
 These include:
+
 * Bin crash times 
 * Bin age groups 
 * Get county names based on cntycode 

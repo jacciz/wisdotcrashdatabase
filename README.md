@@ -62,18 +62,26 @@ crash <- import_db_data(
   columns = c("CRSHMTH")
 )
 crash %>% count(year(CRSHDATE))
+#>    year(CRSHDATE)      n
+#> 1:           2015 121613
+#> 2:           2016 129051
+#> 3:           2017 139870
+#> 4:           2018 144212
 ```
-
-year(CRSHDATE) n 1: 2015 121613 2: 2016 129051 3: 2017 139870 4: 2018
-144212
 
 ## Crash flags
 
 There are also functions to get crash flags. When run, a new column is
-added with either a “Y” or “N” if that flag exists. Flags include: \*
-Deer \* Distracted driver \* Impaired driver \* Speed \* Teen driver \*
-Older driver\_flag \* Seatbelt\_flag\_by\_unit \* Suspected drug or
-alcohol
+added with either a “Y” or “N” if that flag exists. Flags include:
+
+-   Deer
+-   Distracted driver
+-   Impaired driver
+-   Speed
+-   Teen driver
+-   Older driver\_flag
+-   Seatbelt\_flag\_by\_unit
+-   Suspected drug or alcohol
 
 #### Example: Number of speed crashes
 
@@ -97,8 +105,12 @@ import_db_data(
 ## Relabel functions
 
 There’s also functions that may summarize data for analysis. These
-include: \* Bin crash times \* Bin age groups \* Get county names based
-on cntycode \* Bin injures into Killed, Injured, No Injury
+include:
+
+-   Bin crash times
+-   Bin age groups
+-   Get county names based on cntycode
+-   Bin injures into Killed, Injured, No Injury
 
 #### Example: People injured
 
