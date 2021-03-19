@@ -7,7 +7,7 @@
 import_db_data(filepath, db_type, years_old = c(), years = c(), columns = c())
 }
 \arguments{
-\item{filepath}{path where CSVs are stored (must all be in this folder)}
+\item{filepath}{path where FSTs are stored (must all be in this folder)}
 
 \item{db_type}{Type of database - any one of "crash", "vehicle", or "person"}
 
@@ -35,5 +35,5 @@ automatically selected.
 \examples{
 import_db_data(filepath = "C:/CSV/csv_from_sas/fst/", db_type = "crash",
   years_old = c("15", "16"), years = c("17","18"),  columns = c("DRVRPC"))
-\dontrun{import_db_data(csv_path, "person", years = "20")}
+\dontrun{import_db_data(fst_path, "person", years = "20")}
 }

@@ -105,12 +105,19 @@ testthat::test_that("2016/2017 deer crashes",
                       ), 40312)
                     })
 # This doesn't work - produced no output
-# testthat::test_that("muni lookup",
-#                     {
-#                       testthat::expect_equal(
-#                         find_municipality_codes("Adams", "City") %>% dplyr::select(MuniCode)
-#                       , "152")
-#                     })
+testthat::test_that("muni lookup",
+                    {
+                      testthat::expect_equal(
+                        find_municipality_codes("Adams", "City") %>% dplyr::select(MuniCode) %>% as.character()
+                      , "152")
+                    })
+
+testthat::test_that("county lookup",
+                    {
+                      testthat::expect_equal(
+                        find_countycode_fips("Dane") %>% dplyr::select(ctycode) %>% as.character()
+                        , "13")
+                    })
 
 # testthat::expect_error( import_db_data(
 #   filepath = "C:/CSV/csv_from_sas/fst/",

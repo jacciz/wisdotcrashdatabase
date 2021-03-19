@@ -6,7 +6,7 @@
 #' CRSHSVR, to match new db. Note: if an old db is imported, all columns will be
 #' automatically selected.
 #' @importFrom magrittr %>%
-#' @param filepath path where CSVs are stored (must all be in this folder)
+#' @param filepath path where FSTs are stored (must all be in this folder)
 #' @param db_type Type of database - any one of "crash", "vehicle", or "person"
 #' @param years Year(s) of new db data c("20", "21"). Must be "17" or higher.
 #' @param years_old Year(s) of old db data c("16"). Must be "16" or lower.
@@ -23,7 +23,7 @@
 #' @examples
 #' import_db_data(filepath = "C:/CSV/csv_from_sas/fst/", db_type = "crash",
 #'   years_old = c("15", "16"), years = c("17","18"),  columns = c("DRVRPC"))
-#' \dontrun{import_db_data(csv_path, "person", years = "20")}
+#' \dontrun{import_db_data(fst_path, "person", years = "20")}
 import_db_data <-
   function(filepath,
            db_type,
@@ -100,6 +100,7 @@ import_db_data <-
 # If columns = c(), all columns are returned
 read_cols <- function(file_name, colsToKeep) {
   header <- fst::read_fst(file_name, to = 1)
+  print(colsToKeep)
   if (is.null(colsToKeep)) {
     return(colnames(header))
   } else {
@@ -140,7 +141,7 @@ read_fst_for_new_db <- function(file_to_read, col_to_select) {
         union(c("CRSHNMBR"), col_to_select)
     }
   } else {
-    col_to_select <- c("CRSHNMBR")
+    col_to_select <- c()
   }
 
   found_columns <- read_cols(file_to_read, col_to_select)

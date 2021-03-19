@@ -7,7 +7,7 @@
 import_narrative(filepath, years)
 }
 \arguments{
-\item{filepath}{path where CSVs are stored (must all be in this folder)}
+\item{filepath}{path where FSTs are stored (must all be in this folder)}
 
 \item{years}{Year(s) of new db data c("20", "21"). Must be "17" or higher.}
 }

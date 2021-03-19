@@ -38,7 +38,6 @@ find_countycode_fips <- function(county_to_find){
 
 #' Find municode by municipality
 #'
-#'
 #' @param municipality_to_find name of municipality (i.e. "Adams")
 #' @param ctv c("City", "Town", "Village")
 #'
