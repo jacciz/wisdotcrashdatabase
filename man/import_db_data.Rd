@@ -19,7 +19,8 @@ import_db_data(filepath, db_type, years_old = c(), years = c(), columns = c())
 always be imported (if applicable): "CRSHNMBR", "CRSHDATE", "CNTYCODE
 ,"CRSHSVR", "UNITNMBR", "ROLE","VEHTYPE","WISINJ". Columns with multiples,
 like DRVRPC and ANMLTY, only the first part without the number should be
-inputted. For old db, all columns will be imported.}
+inputted. For old db, all columns will be imported.
+If columns = c(), all columns will be selected.}
 }
 \value{
 dataframe of either crash, vehicle or person

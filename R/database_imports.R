@@ -15,6 +15,7 @@
 #'   ,"CRSHSVR", "UNITNMBR", "ROLE","VEHTYPE","WISINJ". Columns with multiples,
 #'   like DRVRPC and ANMLTY, only the first part without the number should be
 #'   inputted. For old db, all columns will be imported.
+#'   If columns = c(), all columns will be selected.
 #'
 #' @return dataframe of either crash, vehicle or person
 #' @export
@@ -96,11 +97,15 @@ import_db_data <-
   }
 
 # Read the first row to find which columns actually exists, returns columns that exist.
+# If columns = c(), all columns are returned
 read_cols <- function(file_name, colsToKeep) {
   header <- fst::read_fst(file_name, to = 1)
-  colsToKeep <- union(c("CRSHDATE","CNTYCODE", "CRSHSVR","UNITNMBR", "ROLE","VEHTYPE","WISINJ"), colsToKeep) # Tack this on
-  # Returns only columns found in the df
-  subset(colsToKeep, colsToKeep %in% colnames(header))
+  if (is.null(colsToKeep)) {
+    return(colnames(header))
+  } else {
+    colsToKeep <- union(c("CRSHDATE","CNTYCODE", "CRSHSVR","UNITNMBR", "ROLE","VEHTYPE","WISINJ"), colsToKeep) # Tack this on
+    # Returns only columns found in the df
+    return(subset(colsToKeep, colsToKeep %in% colnames(header)))}
 }
 
 # This reads fst files and converts data types so they all match for all db

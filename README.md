@@ -8,10 +8,10 @@
 
 wisdotcrashdatabase makes data pulls and data analysis much easier
 inside an R environment. To set up an R environment, you must convert
-the entire database into CSVs. I wrote automated scripts for these.
-Haven package is an option, but formatting of the labels was an issue.
-This package has functions to get certain crash flags, relabel by age or
-injury type for easier grouping.
+the entire database into FST format. I wrote automated scripts for
+these. Haven package is an option, but formatting of the labels was an
+issue. This package can gather crash flags, relabel by age or injury
+type for easier grouping, and can lookup county/municiaplity codes.
 
 ## Installation
 
@@ -29,18 +29,18 @@ devtools::install_github("jacciz/wisdotcrashdatabase")
 
 The format data in this package must be in a .fst, but narratives must
 be in a .csv. In order to set the up, SAS code is run for each year and
-is exported to a folder of your choosing. This code are the three SAS
-scripts in inst/extdata/SAS\_to\_FST/. Use the appropriate code for the
-appropriate crash db year. This code outputs a CSV of crash, person,
-vehicle, and narrative. Scripts must be run for each year. These CSVs
-must be in a single folder and you may have to change the folder path in
-the code.
+is exported to a folder of your choosing. This is done by running the
+three SAS scripts in inst/extdata/SAS\_to\_FST/. Use the appropriate
+code for the appropriate crash db year. This code outputs a CSV of
+crash, person, vehicle, and narrative. Scripts must be run for each
+year. These CSVs must be in a single folder and you may have to change
+the folder path in the code.
 
-Next, run the R code to translate the CSV to .fst with ‘CSV\_to\_FST.R’.
-This reads the CSV files and exports each as a FST. This is a batch job
-and can run only ONCE. To update current year (like 2021), the .ps1 file
-automates this translation from SAS to .fst by running the command in
-Shell. Be sure to change the file paths!
+Next, run the R code to translate the .csv to .fst with
+‘CSV\_to\_FST.R’. This reads all the CSV files and exports each as a
+FST. This is a batch job and can run only ONCE. To update current year
+(like 2021), the .ps1 file automates this translation from SAS to .fst
+by running the command in Shell. Be sure to change the file paths!
 
 ## Importing data
 
@@ -143,6 +143,7 @@ import_db_data(
 
 -   Get motorcyclists
 -   Import crash narratives
+-   Lookup county code and fips \# Lookup municode by name and ctv
 
 ## For help
 

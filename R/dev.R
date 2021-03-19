@@ -10,7 +10,7 @@
 # usethis::use_test("read_cols") to test functions (use Build pane)
 
 # devtools::build_readme() # Render readme.md
-#  devtools::build_manual(path = "c:/W_shortcut/wisdotcrashdatabase")path = "c:/W_shortcut/wisdotcrashdatabase") # Render PDF manual
+# devtools::build_manual(path = "c:/W_shortcut/wisdotcrashdatabase")path = "c:/W_shortcut/wisdotcrashdatabase") # Render PDF manual
 # R CMD Rd2pdf c:/W_shortcut/wisdotcrashdatabase
 #tinytex::latexmk()
 # tinytex::latexmk("C:/W_shortcut/wisdotcrashdatabase/.Rd2pdf21644/Rd2.tex")

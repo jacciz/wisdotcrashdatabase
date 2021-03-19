@@ -104,6 +104,14 @@ testthat::test_that("2016/2017 deer crashes",
                         ) %>% get_deerflag_crashes() %>% dplyr::filter(deer_flag == "Y")
                       ), 40312)
                     })
+# This doesn't work - produced no output
+# testthat::test_that("muni lookup",
+#                     {
+#                       testthat::expect_equal(
+#                         find_municipality_codes("Adams", "City") %>% dplyr::select(MuniCode)
+#                       , "152")
+#                     })
+
 # testthat::expect_error( import_db_data(
 #   filepath = "C:/CSV/csv_from_sas/fst/",
 #   db_type = "person",
