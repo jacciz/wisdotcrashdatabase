@@ -2,16 +2,19 @@
 #'
 #' Adds a new column that gives crash hour.
 #' @param dataframe dataframe
+#' @param time_column Time column
+#' @param combine_with_old combines newtime with old db
 #'
 #' @return A new column called \emph{newtime} with crash hour. i.e. "12am"
 #' @export
 #'
 #' @examples
 #' \dontrun{get_crash_times(crash17)}
-get_crash_times <- function(dataframe) {
+get_crash_times <- function(dataframe, time_column = "CRSHTIME", combine_with_old = FALSE) {
+  dataframe_time <-
   dataframe %>% dplyr::mutate(newtime = cut(
     # this finds crash time by hour
-    .data$CRSHTIME,
+    .data[[time_column]],
     c(
       1,
       100,
@@ -67,4 +70,9 @@ get_crash_times <- function(dataframe) {
     ),
     include.lowest = T
   ))
+  if (combine_with_old == TRUE){
+    both = dplyr::left_join(dataframe_time, old_crash_groups, by = "CRSHTIME_GROUP")
+    return(dplyr::mutate(both, newtime = ifelse(is.na(.data$newtime), .data$newtime_old, .data$newtime)))
+  }
+  return(dataframe_time)
 }

@@ -5,6 +5,7 @@
 #' This just matches with the old db AGE.
 #' @inheritParams get_driver_flags
 #' @param bin_by select either "5_yr", "10_yr", or "old_db_yr"
+#' @param age_column age column
 #'
 #' @return A new column called \emph{age_group_5yr}, \emph{age_group_10yr} or
 #'   \emph{age_groups_both}
@@ -13,22 +14,23 @@
 #' @examples
 #' \dontrun{get_age_groups(person17, bin_by = "10_yr"}
 get_age_groups <- function(person_df,
-                           bin_by = "5_yr") {
+                           bin_by = "5_yr",
+                           age_column = "AGE") {
   if (bin_by == "5_yr") {
-    return(age_group_5yr(person_df))
+    return(age_group_5yr(person_df, age_column))
   }
   if (bin_by == "10_yr") {
-    return(age_group_10yr(person_df))
+    return(age_group_10yr(person_df, age_column))
   }
   if (bin_by == "old_db_yr") {
     return(get_age_groups_old_new_db(person_df))
   }
 }
 
-age_group_5yr <- function(person_df) {
+age_group_5yr <- function(person_df, age_column) {
   person_df <- person_df %>% dplyr::mutate(age_group_5yr = cut(
     # add age_group column, 5 year intervals
-    .data$AGE,
+    .data[[age_column]],
     right = FALSE,
     c(0, 4, 9, 14, 19, 24, 29, 34, 39, 44, 49, 54, 59, 64, 69, 120),
     labels = c(
@@ -63,11 +65,11 @@ age_group_5yr <- function(person_df) {
 }
 # This is to match old crash . Old db age = 0 is UNKNOWN
 # Add this ?? dplyr::mutate(age_group_10yr = ifelse(age_group_10yr == "UNKNOWN", AGE_GROUP, as.character(age_group_10yr)))
-age_group_10yr <- function(person_df) {
+age_group_10yr <- function(person_df, age_column) {
   person_df <-
     person_df %>% dplyr::mutate(age_group_10yr = cut(
       # add age_group column
-      .data$AGE,
+      .data[[age_column]],
       # right = FALSE,
       c(
         1,

@@ -4,10 +4,14 @@
 \alias{get_crash_times}
 \title{Get crash hour (new db)}
 \usage{
-get_crash_times(dataframe)
+get_crash_times(dataframe, time_column = "CRSHTIME", combine_with_old = FALSE)
 }
 \arguments{
 \item{dataframe}{dataframe}
+
+\item{time_column}{Time column}
+
+\item{combine_with_old}{combines newtime with old db}
 }
 \value{
 A new column called \emph{newtime} with crash hour. i.e. "12am"

@@ -211,3 +211,33 @@ lookup_countycode_and_fips <- tibble::tribble(
   "Wood","71", "141",
   "Out of State","72", NA
 )
+old_crash_groups <- tibble::tribble(
+  ~CRSHTIME_GROUP, ~newtime_old,
+  "12-1  AM", "12am",
+  "1-2   AM", "1am",
+  "2-3   AM", "2am",
+  "3-4   AM", "3am",
+  "4-5   AM", "4am",
+  "5-6   AM", "5am",
+  "6-7   AM", "6am",
+  "7-8   AM",  "7am",
+  "8-9   AM", "8am",
+  "9-10  AM", "9am",
+  "10-11 AM", "10am",
+  "11-12 NOON", "11am",
+  "12-1  PM", "12pm",
+  "1-2   PM", "1pm",
+  "2-3   PM", "2pm",
+  "3-4   PM",  "3pm",
+  "4-5   PM", "4pm",
+  "5-6   PM", "5pm",
+  "6-7   PM", "6pm",
+  "7-8   PM", "7pm",
+  "8-9   PM", "8pm",
+  "9-10  PM", "9pm",
+  "10-11 PM", "10pm",
+  "11-MIDNITE", "11pm",
+  "UNKNOWN", NA,
+  "12 MIDNITE", "12am",
+  "12 NOON", "12pm"
+)

@@ -17,7 +17,7 @@
 #'   inputted. For old db, all columns will be imported.
 #'   If columns = c(), all columns will be selected.
 #'
-#' @return dataframe of either crash, vehicle or person
+#' @return dataframe of either crash, vehicle or person. crsh_year column.
 #' @export
 #'
 #' @examples
@@ -92,15 +92,14 @@ import_db_data <-
     } else {
       df_old = data.frame()
     }
-
-    dplyr::bind_rows(df_new, df_old)
+    dplyr::bind_rows(df_new, df_old) %>%
+      dplyr::mutate(year = lubridate::year(.data$CRSHDATE))
   }
 
 # Read the first row to find which columns actually exists, returns columns that exist.
 # If columns = c(), all columns are returned
 read_cols <- function(file_name, colsToKeep) {
   header <- fst::read_fst(file_name, to = 1)
-  print(colsToKeep)
   if (is.null(colsToKeep)) {
     return(colnames(header))
   } else {
@@ -195,4 +194,38 @@ read_fst_for_old_db <- function(file_to_read) {
     dplyr::mutate_at("CNTYCODE", stringr::str_to_title) %>%
     dplyr::mutate(CNTYCODE = ifelse(.data$CNTYCODE == "Fond Du Lac", "Fond du Lac", .data$CNTYCODE))
   # ZIPCODE = ifelse(is.na(ZIPCODE), "0", ZIPCODE)
+}
+
+
+#' Get a list of all years in between two dates
+#'
+#' Useful when importing data among many years. Must be exactly two digits (i.e. 1992 would be "92").
+#' @param start_year start year of list, lowest is 1985.
+#' @param end_year end year of list, highest is 2030.
+#'
+#' @return list of dates for years and years_old for data import
+#' @export
+#'
+#' @examples
+#' get_list_of_years("99", "14")
+get_list_of_years <- function(start_year,
+                              end_year) {
+  # between 1985 and 2030
+  if (start_year > 85 & end_year < 30) {
+    year1 = as.character(seq(start_year, 99,  1))
+    year2 = formatC(
+      seq(00, end_year, 1),
+      digits = 0,
+      width = 2,
+      format = "f",
+      flag = "0"
+    )
+    return(c(year1, year2))
+    # between 1985 and 1999
+  } else if (start_year > 85 & end_year <= 99) {
+    return(as.character(seq(start_year, end_year,  1)))
+  } # between 2000 and 2030
+  else if (start_year >= 0 & end_year < 30) {
+    return(formatC(seq(start_year, end_year, 1), digits = 0, width = 2, format = "f", flag = "0"))
+  }
 }

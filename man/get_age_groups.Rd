@@ -4,12 +4,14 @@
 \alias{get_age_groups}
 \title{Bin age groups by 5 or 10 years (old and new db)}
 \usage{
-get_age_groups(person_df, bin_by = "5_yr")
+get_age_groups(person_df, bin_by = "5_yr", age_column = "AGE")
 }
 \arguments{
 \item{person_df}{person dataframe}
 
 \item{bin_by}{select either "5_yr", "10_yr", or "old_db_yr"}
+
+\item{age_column}{age column}
 }
 \value{
 A new column called \emph{age_group_5yr}, \emph{age_group_10yr} or

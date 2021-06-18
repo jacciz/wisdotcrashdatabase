@@ -23,7 +23,7 @@ inputted. For old db, all columns will be imported.
 If columns = c(), all columns will be selected.}
 }
 \value{
-dataframe of either crash, vehicle or person
+dataframe of either crash, vehicle or person. crsh_year column.
 }
 \description{
 This imports all data based on crash db type, years selected, and columns

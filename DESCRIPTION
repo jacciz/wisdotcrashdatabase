@@ -22,6 +22,7 @@ Suggests:
 Config/testthat/edition: 3
 Imports:
     data.table,
+    lubridate,
     dplyr,
     expss,
     fst,

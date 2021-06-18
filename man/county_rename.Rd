@@ -4,19 +4,21 @@
 \alias{county_rename}
 \title{Get full county name}
 \usage{
-county_rename(any_df, county_col = "CNTYCODE")
+county_rename(any_df, county_col = "CNTYCODE", combine_with_old = FALSE)
 }
 \arguments{
 \item{any_df}{person, crash, or vehicle dataframe}
 
 \item{county_col}{column that has the county code}
+
+\item{combine_with_old}{If TRUE, will bring full county name to \emph{countyname}}
 }
 \value{
 A new column called \emph{countyname}
 }
 \description{
 This looks at the county code and returns a new column \emph{countyname} of the full
-county name.
+county name. Old db, the CNTYCODE is already the full county name.
 }
 \examples{
 \dontrun{county_rename(vehicle17)}
