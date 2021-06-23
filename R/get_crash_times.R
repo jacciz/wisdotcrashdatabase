@@ -71,8 +71,10 @@ get_crash_times <- function(dataframe, time_column = "CRSHTIME", combine_with_ol
     include.lowest = T
   ))
   if (combine_with_old == TRUE){
-    both = dplyr::left_join(dataframe_time, old_crash_groups, by = "CRSHTIME_GROUP")
-    return(dplyr::mutate(both, newtime = ifelse(is.na(.data$newtime), .data$newtime_old, .data$newtime)))
+    both = dplyr::left_join(dataframe_time, old_crash_groups, by = "CRSHTIME_GROUP") %>%
+      mutate(newtime_old = as.factor(.data$newtime_old))
+    return(dplyr::mutate(both, newtime_both = ifelse(is.na(.data$newtime), as.character(.data$newtime_old), as.character(.data$newtime)),
+           newtime_both = as.factor(.data$newtime_both)))
   }
   return(dataframe_time)
 }

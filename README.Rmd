@@ -28,7 +28,7 @@ The package can be installed from [GitHub](https://github.com/) with:
 
 ``` r
 install.packages("devtools")
-devtools::install_github("jacciz/wisdotcrashdatabase")
+devtools::install_github("jacciz/wisdotcrashdatabase@*release")
 ```
 
 ## Setting up the environment
@@ -106,9 +106,10 @@ import_db_data(
 ```
 ## Other functions
 * Get motorcyclists 
+* crash locations (i.e. intersection) 
 * Import crash narratives 
 * Lookup county code and fips 
-# Lookup municode by name and ctv 
+* Lookup municode by name and ctv
 
 ## For help
 Load the wisdotcrashdatabase package in R and type in the console `?import_db_data` or any other function.

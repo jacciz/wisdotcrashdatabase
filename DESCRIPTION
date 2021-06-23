@@ -1,6 +1,6 @@
 Package: wisdotcrashdatabase
 Title: A package used for internal WisDOT crash database pulls and analysis
-Version: 0.0.0.9000
+Version: 0.0.0.9400
 Authors@R: 
     person(given = "Jacci",
            family = "Ziebert",
@@ -22,10 +22,10 @@ Suggests:
 Config/testthat/edition: 3
 Imports:
     data.table,
-    lubridate,
     dplyr,
     expss,
     fst,
+    lubridate,
     magrittr,
     stats,
     stringr,

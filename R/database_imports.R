@@ -83,7 +83,8 @@ import_db_data <-
           "ALCSUSP",
           "DRUGSUSP"
         )
-      ) %>% relabel_CRSHSVR_old_db() # for person relabel_WISINJ_old_db())
+      ) %>% relabel_CRSHSVR_old_db() %>%  # for person relabel_WISINJ_old_db())
+      data.table::as.data.table()
     if (db_type == "person") {
       df_old <- df_old %>% relabel_WISINJ_old_db()
       df_old

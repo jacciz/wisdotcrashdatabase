@@ -1,6 +1,9 @@
 ---
 title: "R Notebook"
-output: html_notebook
+output:
+  pdf_document: default
+  html_notebook: default
+  word_document: default
 ---
 
 
@@ -12,56 +15,16 @@ file_loc = "C:/CSV/csv_from_sas/fst/"
 ```
 
 ```{r}
-crash <- import_db_data(file_loc, "crash", years_old = c("16"), years = c("17"), columns = c("RLTNTRWY", "CRSHLOC", "INTTYPE", "INTDIS", "CRSHTIME"))
+# crash <- import_db_data(file_loc, "crash", years_old = c("16"), years = c("17"), columns = c("RLTNTRWY", "CRSHLOC", "INTTYPE", "INTDIS", "CRSHTIME"))
 
-crash %>% get_crash_times(combine_with_old = TRUE) %>% 
-  select(CRSHTIME, CRSHTIME_GROUP, newtime ,CRSHDATE, newtime_old) %>% 
-  filter(lubridate::year(CRSHDATE) == 2016, is.na(newtime))
-
-lis=crash$CRSHTIME_GROUP %>% unique()
+# all=crash %>% get_crash_times(combine_with_old = TRUE) %>%
+#   select(CRSHTIME, CRSHTIME_GROUP, newtime, newtime_old, CRSHDATE, newtime_both)# %>%
+#   # filter(lubridate::year(CRSHDATE) == 2016, is.na(newtime))
+# # all=crash %>% county_rename(combine_with_old = TRUE)
+# all$newtime_both %>% unique()
+# all %>% filter(is.na(newtime_both))
 ```
 
-```{r}
-person <- import_db_data(file_loc, "person", years_old = c("16"), years = c("17"), columns = c("AGE"))
-
-get_age_groups(person) %>% select(AGE,age_group_5yr )
-age_group_5yr <- function(person_df, age_column = "AGE") {
-  person_df <- person_df %>% dplyr::mutate(age_group_5yr = cut(
-    # add age_group column, 5 year intervals
-    .data[[age_column]],
-    right = FALSE,
-    c(0, 4, 9, 14, 19, 24, 29, 34, 39, 44, 49, 54, 59, 64, 69, 120),
-    labels = c(
-      "0-4",
-      "5-9",
-      "10-14",
-      "15-19",
-      "20-24",
-      "25-29",
-      "30-34",
-      "35-39",
-      "40-44",
-      "45-49",
-      "50-54",
-      "55-59",
-      "60-64",
-      "65-69",
-      "70+"
-    ),
-    include.lowest = T
-  ))
-  # Get levels of age_group factor and add Unknown
-  # levels <- levels(.data$person_df$age_group_5yr)
-  # levels[length(levels) + 1] <- "UNKNOWN"
-  # # refactor agegroup to include "None" as a factor level
-  # # and replace NA with "None"
-  # person_df$age_group_5yr <- person_df %>%
-  #   factor(.data$age_group_5yr, levels = levels)
-  # .data$person_df$age_group_5yr[is.na(.data$person_df$age_group_5yr)] <-
-  #   "UNKNOWN"
-  person_df
-}
-```
 ```{r}
 
 year1=as.character(seq(88, 99,  1))
@@ -92,5 +55,8 @@ get_list_of_years <- function(start_year = "94",
 }
 
 get_list_of_years("89", "89")
+```
+```{r find muni codes}
+# sub <- tigris::county_subdivisions(state = "WI")
 ```
 
